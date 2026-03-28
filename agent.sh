@@ -34,7 +34,7 @@ AGENT_LEARNING_DIR="$LEARNED_DIR/$TIMESTAMP"
 AGENT_SCRIPT_PATH="$AGENTS_DIR/$AGENT_NAME.sh" # For agent-specific logic if needed
 
 # --- Ensure Directories Exist ---
-mkdir -p "$BRAIN_DIR" "$MEMORY_FILE" "$CONTEXT_FILE" "$LOG_FILE" "$AGENT_LEARNING_DIR" "$AGENTS_DIR"
+mkdir -p -p -p "$BRAIN_DIR" "$MEMORY_FILE" "$CONTEXT_FILE" "$LOG_FILE" "$AGENT_LEARNING_DIR" "$AGENTS_DIR"
 echo "Brain directory and logs initialized."
 
 # --- Step 1: SYNC Collective Memory ---
@@ -199,7 +199,7 @@ if $PROVIDER_SUCCESS; then
 
     if [ -n "$LEARNING_CONTENT" ]; then
         echo "Found learning content. Appending to $AGENT_LEARNING_DIR/$AGENT_NAME.md"
-        mkdir -p "$AGENT_LEARNING_DIR" # Ensure directory exists
+        mkdir -p -p -p "$AGENT_LEARNING_DIR" # Ensure directory exists
         # Append learning content, maintaining format
         echo "--- Learning from $PROVIDER_NAME (or Ollama Fallback) on $TIMESTAMP ---" >> "$AGENT_LEARNING_DIR/$AGENT_NAME.md"
         echo "$LEARNING_CONTENT" >> "$AGENT_LEARNING_DIR/$AGENT_NAME.md"
