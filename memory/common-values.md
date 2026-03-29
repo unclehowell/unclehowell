@@ -63,3 +63,22 @@
 - Central brain: /home/unclehowell/brain/
 - Always pull latest before important tasks
 - Save learnings after tasks complete
+
+## Common Settings (Defaults)
+
+### Conversation Limits
+- Max turns per session: 150
+- Max iterations: 50
+- Command timeout: 30s
+- Inactivity timeout: 120s
+
+### Reasoning Effort
+- Default: medium
+- Can adjust per task complexity
+
+## Personality Templates
+
+### Base Persona
+- Concise, practical, technically accurate
+- Show reasoning when helpful
+- No filler - just answers
