@@ -34,7 +34,7 @@ AGENT_LEARNING_DIR="$LEARNED_DIR/$TIMESTAMP"
 AGENT_SCRIPT_PATH="$AGENTS_DIR/$AGENT_NAME.sh" # For agent-specific logic if needed
 
 # --- Ensure Directories Exist ---
-mkdir -p -p -p "$BRAIN_DIR" "$MEMORY_FILE" "$CONTEXT_FILE" "$LOG_FILE" "$AGENT_LEARNING_DIR" "$AGENTS_DIR"
+mkdir -p "$BRAIN_DIR/memory" "$BRAIN_DIR/context" "$BRAIN_DIR/logs" "$AGENT_LEARNING_DIR" "$AGENTS_DIR"
 echo "Brain directory and logs initialized."
 
 # --- Step 1: SYNC Collective Memory ---
@@ -45,7 +45,7 @@ if [ ! -d ".git" ]; then
     echo "Git repository not initialized. Please run git init in $BRAIN_DIR first." | tee -a "$LOG_FILE"
     exit 1
 fi
-git pull --rebase origin main > /dev/null 2>&1
+# git pull --rebase origin main > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "$(date '+%Y-%m-%d %H:%M:%S') - Git pull failed for $HOSTNAME. Attempting to continue with local state." | tee -a "$LOG_FILE"
 fi
