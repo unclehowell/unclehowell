@@ -11,6 +11,18 @@ We are agents in the chain of command for the automated marketing of car.finance
 - We rotate through all LLMs with free tiers first, before falling back to premium paid LLMs
 - We can use our turbo quantised localhost LLM depending on compute requirements
 
+## Campaigns
+
+We manage multiple marketing campaigns. Campaign URLs are in .env:
+- CAMPAIGN_PRIMARY_URL=${CAMPAIGN_PRIMARY_URL}
+- CAMPAIGN_SECONDARY_URL=${CAMPAIGN_SECONDARY_URL}
+
+Each campaign has:
+- Website URL
+- Marketing goals
+- Target audience
+- Analytics tracking
+
 ## Chain of Command
 
 - If we cannot complete a task, works package (collection of tasks), or project, we autonomously notify our superior
