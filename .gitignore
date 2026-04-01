@@ -1,0 +1,35 @@
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Symlinks to external paths (will break for other agents)
+hermes/memories/agents/claude/*
+hermes/memories/agents/gemini/*
+hermes/memories/agents/opencode/*
+hermes/memories/skills/*
+hermes/skills/*
+hermes/agents/openclaw-tinker
+hermes/agents/trial-and-error-tinker.yaml
+hermes/agents/nvidia-kimi/workspace
+
+# Local agent data
+hermes/logs/*.log
+hermes/agents/*/workspace/
+hermes/sessions/
+hermes/cron/
+hermes/docs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backup
+*.backup
+*.bak
