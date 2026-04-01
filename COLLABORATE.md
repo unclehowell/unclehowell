@@ -49,7 +49,7 @@ This brain operates like military doctrine:
 2. Agents interpret directives as universal principles
 3. Agents apply principles with campaign-specific data from .env/customisation/
 4. Agents report back with results
-5. Learnings documented in /learned/
+5. Learnings documented via Hermes memory tool or memory/archive/learned/
 
 ## File Organization
 
@@ -58,7 +58,7 @@ This brain operates like military doctrine:
 | /memory/ | Universal values, standards, procedures | YES |
 | /memory/roles/ | Role personalities (engineer, creative, etc) | YES |
 | /skills/ | Shared capabilities for all agents | YES |
-| /learned/ | Collective learnings from all campaigns | YES |
+| /memory/archive/learned/ | Archived learnings (legacy) | YES |
 | .env | API keys, URLs, secrets | NO |
 | .env.customisation/ | Campaign-specific settings | NO |
 
@@ -84,7 +84,7 @@ This brain operates like military doctrine:
 **Agent action:**
 1. Identify the underlying principle: "Ad copy length should match platform requirements"
 2. Update /memory/procedures/ad-creation.md with: "Ad copy should be tailored to platform character limits unless otherwise specified"
-3. Create /learned/YYYY-MM-DD/ad-optimisation.md with: "Platform-specific copy length improves engagement"
+3. Save learning via Hermes memory tool: "Platform-specific copy length improves engagement"
 4. NO mention of car finance specifically
 
 ## UK Law Compliance

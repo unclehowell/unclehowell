@@ -13,9 +13,9 @@ import json
 import subprocess
 from pathlib import Path
 
-BRAIN_DIR = "/home/unclehowell/brain/hermes"
-MEMORY_DIR = f"{BRAIN_DIR}/memories"
-LEARNED_DIR = f"{BRAIN_DIR}/memories/learned"
+BRAIN_DIR = "/home/unclehowell/brain"
+MEMORY_DIR = f"{BRAIN_DIR}/memory"
+LEARNED_DIR = f"{BRAIN_DIR}/memory/archive/learned"
 
 
 def run_cmd(cmd):
@@ -80,7 +80,7 @@ def get_context():
     context = []
 
     # Core memory
-    core_file = f"{BRAIN_DIR}/MEMORY.md"
+    core_file = f"{BRAIN_DIR}/memory/core.md"
     if os.path.exists(core_file):
         context.append(f"=== CORE KNOWLEDGE ===\n{open(core_file).read()}")
 

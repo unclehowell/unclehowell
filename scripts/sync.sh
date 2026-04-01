@@ -14,7 +14,7 @@ echo "=== Brain Sync: $(date) ==="
 git fetch origin
 git reset --hard origin/$BRANCH 2>/dev/null || true
 
-# Add new learned lessons
+# Add all changes (memory, skills, scripts, archived learnings)
 git add -A
 
 # Check if there are changes

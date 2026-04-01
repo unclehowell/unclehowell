@@ -13,7 +13,7 @@ memory/skills/*
 # Local agent data
 logs/*.log
 agents/*/workspace/
-learned/2026-*/
+memory/archive/learned/2026-*/
 
 # IDE
 .vscode/

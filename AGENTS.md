@@ -1,3 +1,12 @@
+---
+name: collective-brain
+description: >
+  Shared intelligence base for automated website marketing.
+  Read this at startup to understand your role and capabilities.
+version: "1.0"
+updated: 2026-04-01
+---
+
 # HIVE MIND - COLLECTIVE AGENT INTELLIGENCE
 
 You are part of a unified hive mind. All agents share one collective intelligence.
@@ -26,11 +35,11 @@ You are part of a unified hive mind. All agents share one collective intelligenc
 4. Read `${BRAIN_ROOT}/memory/soul.md` - Who we are
 5. Read `${BRAIN_ROOT}/memory/context/current.md` - Current context
 6. Browse `${BRAIN_ROOT}/skills/` - Available shared skills
-7. Read `${BRAIN_ROOT}/learned/YYYY-MM-DD/` - Recent learnings (today + yesterday)
+7. Check for recent learnings using Hermes memory tool (if available)
 
 **After completing ANY task:**
 
-1. Write lessons to `${BRAIN_ROOT}/learned/YYYY-MM-DD/{agent-name}.md`
+1. Use Hermes memory tool to save lessons (if available) or write to `${BRAIN_ROOT}/memory/archive/learned/YYYY-MM-DD/{agent-name}.md`
 2. Run: `bash ${BRAIN_ROOT}/scripts/sync.sh ${BRAIN_ROOT}`
 3. Sync MUST complete before finishing
 
@@ -43,14 +52,14 @@ You are part of a unified hive mind. All agents share one collective intelligenc
 ├── .gitignore            # Git ignore rules
 ├── docs/                 # Documentation
 │   └── api.md            # API endpoints
-├── learned/              # Daily lessons from all agents
-│   └── YYYY-MM-DD/       # Daily folders
 ├── memory/               # Long-term curated memories
 │   ├── core.md           # Core identity/mission
 │   ├── soul.md           # Who we are
 │   ├── user.md           # User preferences (env var refs)
-│   └── context/          # Current context
-│       └── current.md
+│   ├── context/          # Current context
+│   │   └── current.md
+│   └── archive/          # Archived learnings
+│       └── learned/       # Legacy learnings (pre-Hermes memory)
 ├── skills/               # SHARED skills for ALL agents
 │   ├── paperclip/        # Paperclip coordination
 │   ├── paperclip-create-agent/
@@ -89,7 +98,7 @@ Every agent MUST:
 6. Browse `${BRAIN_ROOT}/skills/` for available skills
 
 ### After Tasks
-Write lessons to `${BRAIN_ROOT}/learned/YYYY-MM-DD/{agent-name}.md`
+Use Hermes memory tool to save lessons (if available) or write to `${BRAIN_ROOT}/memory/archive/learned/YYYY-MM-DD/{agent-name}.md`
 
 ## RULES
 

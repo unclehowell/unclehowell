@@ -6,10 +6,10 @@ set -e
 
 BRAIN_DIR="$HOME/brain"
 MEMORY_FILE="$BRAIN_DIR/memory/core.md"
-CONTEXT_FILE="$BRAIN_DIR/context/current.md"
+CONTEXT_FILE="$BRAIN_DIR/memory/context/current.md"
 PROVIDERS_FILE="$BRAIN_DIR/providers.json"
-LOG_FILE="$BRAIN_DIR/logs/failover.log"
-LEARNED_DIR="$BRAIN_DIR/learned"
+LOG_FILE="$HOME/.hermes/logs/failover.log"
+LEARNED_DIR="$BRAIN_DIR/memory/archive/learned"
 AGENTS_DIR="$BRAIN_DIR/agents"
 
 # --- Check arguments ---

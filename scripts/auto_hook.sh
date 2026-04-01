@@ -20,19 +20,19 @@ pull_brain() {
 learn() {
     local lesson="$1"
     local category="${2:-general}"
-    local filename="$BRAIN_DIR/learned/$(date '+%Y-%m-%d')/cli.md"
-    mkdir -p "$BRAIN_DIR/learned/$(date '+%Y-%m-%d')"
+    local filename="$BRAIN_DIR/memory/archive/learned/$(date '+%Y-%m-%d')/cli.md"
+    mkdir -p "$BRAIN_DIR/memory/archive/learned/$(date '+%Y-%m-%d')"
     echo "### $(date '+%H:%M') - $category" >> "$filename"
     echo "$lesson" >> "$filename"
     echo "" >> "$filename"
-    echo "💾 Saved to brain"
+    echo "💾 Saved to brain (legacy - prefer Hermes memory tool)"
 }
 
 # Recall
 recall() {
     local query="$1"
     echo "=== Brain recall: $query ==="
-    grep -ri "$query" "$BRAIN_DIR/memory/" "$BRAIN_DIR/learned/" 2>/dev/null | head -10
+    grep -ri "$query" "$BRAIN_DIR/memory/" "$BRAIN_DIR/memory/archive/learned/" 2>/dev/null | head -10
 }
 
 # Brain context

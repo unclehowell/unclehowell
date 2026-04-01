@@ -23,16 +23,17 @@ learn() {
     local lesson="$1"
     local category="${2:-general}"
     local timestamp=$(date '+%Y-%m-%d %H:%M')
-    local filename="$BRAIN_DIR/learned/$(date '+%Y-%m-%d')/$AGENT_NAME.md"
+    # Use Hermes memory tool if available, otherwise use archived location
+    local filename="$BRAIN_DIR/memory/archive/learned/$(date '+%Y-%m-%d')/$AGENT_NAME.md"
     
-    mkdir -p "$BRAIN_DIR/learned/$(date '+%Y-%m-%d')"
+    mkdir -p "$BRAIN_DIR/memory/archive/learned/$(date '+%Y-%m-%d')"
     
     cat >> "$filename" << EOF
 ### $timestamp - $AGENT_NAME
 $lesson
 
 EOF
-    echo "💾 Lesson saved to brain: $category"
+    echo "💾 Lesson saved to brain: $category (legacy - prefer Hermes memory tool)"
 }
 
 # Get relevant memory for current task
@@ -45,9 +46,9 @@ recall() {
         results=$(grep -ri "$query" "$BRAIN_DIR/memory/" 2>/dev/null | head -5)
     fi
     
-    # Search in learned
-    if [ -d "$BRAIN_DIR/learned" ]; then
-        results="$results"$(grep -ri "$query" "$BRAIN_DIR/learned/" 2>/dev/null | head -5)
+    # Search in learned (archived location)
+    if [ -d "$BRAIN_DIR/memory/archive/learned" ]; then
+        results="$results"$(grep -ri "$query" "$BRAIN_DIR/memory/archive/learned/" 2>/dev/null | head -5)
     fi
     
     echo "$results"
@@ -72,7 +73,7 @@ brain_summary() {
     echo "Last sync: $(git -C "$BRAIN_DIR" log -1 --format='%h %ci' 2>/dev/null || echo 'Never')"
     echo ""
     echo "Memory files: $(find "$BRAIN_DIR/memory" -type f 2>/dev/null | wc -l)"
-    echo "Learned today: $(find "$BRAIN_DIR/learned/$(date '+%Y-%m-%d')" -type f 2>/dev/null | wc -l)"
+    echo "Learned today (archived): $(find "$BRAIN_DIR/memory/archive/learned/$(date '+%Y-%m-%d')" -type f 2>/dev/null | wc -l)"
     echo ""
 }
 

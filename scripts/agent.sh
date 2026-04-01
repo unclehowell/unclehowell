@@ -5,19 +5,19 @@
 
 set -eo pipefail # Exit on error, exit on pipe failure, enable debugging
 
-BRAIN_DIR="$HOME/brain/hermes"
-MEMORY_FILE="$BRAIN_DIR/MEMORY.md"
-CONTEXT_FILE="$BRAIN_DIR/memories/context/current.md"
+BRAIN_DIR="$HOME/brain"
+MEMORY_FILE="$BRAIN_DIR/memory/core.md"
+CONTEXT_FILE="$BRAIN_DIR/memory/context/current.md"
 PROVIDERS_FILE="$BRAIN_DIR/providers.json"
-LOG_FILE="$BRAIN_DIR/logs/failover.log"
-LEARNED_DIR="$BRAIN_DIR/memories/learned"
+LOG_FILE="$HOME/.hermes/logs/failover.log"
+LEARNED_DIR="$BRAIN_DIR/memory/archive/learned"
 AGENTS_DIR="$BRAIN_DIR/agents"
  # Directory for agent-specific scripts if needed
 
 # --- Safety Protocol ---
 # Ensure no API keys or local file paths are directly embedded in prompts or scripts.
 # This script relies on environment variables for API keys.
-# The 'learned' directory will store AI-generated content, not sensitive system info.
+# Learnings go to memory/archive/learned/ (legacy) or Hermes memory tool
 
 # --- Input Validation ---
 if [ "$#" -lt 3 ]; then

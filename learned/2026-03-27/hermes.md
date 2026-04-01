@@ -1,1 +1,0 @@
-- Ty Mawr was a Welsh gentry house.

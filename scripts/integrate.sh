@@ -35,23 +35,24 @@ learn() {
     local lesson="$1"
     local category="${2:-general}"
     local agent="${3:-unknown}"
-    local filename="$BRAIN_DIR/learned/$(date '+%Y-%m-%d')/$agent.md"
+    # Use Hermes memory tool if available, otherwise use archived location
+    local filename="$BRAIN_DIR/memory/archive/learned/$(date '+%Y-%m-%d')/$agent.md"
     
-    mkdir -p "$BRAIN_DIR/learned/$(date '+%Y-%m-%d')"
+    mkdir -p "$BRAIN_DIR/memory/archive/learned/$(date '+%Y-%m-%d')"
     
     cat >> "$filename" << EOFA
 ### $(date '+%Y-%m-%d %H:%M') - $agent [$category]
 $lesson
 
 EOFA
-    echo "💾 Saved to brain: $category"
+    echo "💾 Saved to brain: $category (legacy - prefer Hermes memory tool)"
 }
 
 # Recall from brain
 recall() {
     local query="$1"
     echo "=== 🔍 Brain recall: $query ==="
-    grep -ri "$query" "$BRAIN_DIR/memory/" "$BRAIN_DIR/learned/" 2>/dev/null | head -10 || echo "No matches"
+    grep -ri "$query" "$BRAIN_ROOT/memory/" "$BRAIN_ROOT/memory/archive/learned/" 2>/dev/null | head -10 || echo "No matches"
 }
 
 # Check for relevant learnings before task
