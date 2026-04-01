@@ -58,6 +58,32 @@ You are part of a unified hive mind. All agents share one collective intelligenc
     └── nvidia-kimi/      # NVIDIA agent launcher
 ```
 
+## SHARED INTELLIGENCE
+
+All agents share skills and memory through this brain.
+
+### Skills Location
+- **Shared skills:** `${BRAIN_ROOT}/skills/`
+- All terminal coding agents (Claude, OpenCode, Groq, Gemini, Aider, Codex, etc.) read from here
+- Skills are NOT duplicated in individual ~/.claude/skills/, ~/.opencode/skills/, etc.
+
+### Memory Location  
+- **Shared memory:** `${BRAIN_ROOT}/memory/`
+- Core identity, soul, user preferences, context
+- All agents read from here for hive mind awareness
+
+### At Startup
+Every agent MUST:
+1. Read `${BRAIN_ROOT}/AGENTS.md`
+2. Read `${BRAIN_ROOT}/memory/core.md`
+3. Read `${BRAIN_ROOT}/memory/soul.md`
+4. Read `${BRAIN_ROOT}/memory/user.md`
+5. Read `${BRAIN_ROOT}/memory/context/current.md`
+6. Browse `${BRAIN_ROOT}/skills/` for available skills
+
+### After Tasks
+Write lessons to `${BRAIN_ROOT}/learned/YYYY-MM-DD/{agent-name}.md`
+
 ## RULES
 
 1. **NO SECRETS** - Never write passwords, API keys, or credentials to brain (it's PUBLIC on GitHub)
