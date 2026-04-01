@@ -8,7 +8,7 @@ memory/agents/claude/*
 memory/agents/gemini/*
 memory/agents/opencode/*
 memory/skills/*
-skills/*
+# skills/*
 
 # Local agent data
 logs/*.log
