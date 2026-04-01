@@ -20,12 +20,13 @@ You are part of a unified hive mind. All agents share one collective intelligenc
 
 **At STARTUP, every agent MUST:**
 
-1. Read `${BRAIN_ROOT}/memory/core.md` - Core identity and mission
-2. Read `${BRAIN_ROOT}/memory/user.md` - User preferences (references .env)
-3. Read `${BRAIN_ROOT}/memory/soul.md` - Who we are
-4. Read `${BRAIN_ROOT}/memory/context/current.md` - Current context
-5. Read `${BRAIN_ROOT}/AGENTS.md` - These instructions
-6. Read `${BRAIN_ROOT}/learned/YYYY-MM-DD/` - Recent learnings (today + yesterday)
+1. Read `${BRAIN_ROOT}/AGENTS.md` - These instructions
+2. Read `${BRAIN_ROOT}/memory/core.md` - Core identity and mission
+3. Read `${BRAIN_ROOT}/memory/user.md` - User preferences (references .env)
+4. Read `${BRAIN_ROOT}/memory/soul.md` - Who we are
+5. Read `${BRAIN_ROOT}/memory/context/current.md` - Current context
+6. Browse `${BRAIN_ROOT}/skills/` - Available shared skills
+7. Read `${BRAIN_ROOT}/learned/YYYY-MM-DD/` - Recent learnings (today + yesterday)
 
 **After completing ANY task:**
 
@@ -38,7 +39,7 @@ You are part of a unified hive mind. All agents share one collective intelligenc
 /home/unclehowell/brain/
 ├── AGENTS.md              # Master instructions (entry point)
 ├── README.md              # Overview
-├── .env.example           # Env var template
+├── .env_example           # Env var template
 ├── .gitignore            # Git ignore rules
 ├── docs/                 # Documentation
 │   └── api.md            # API endpoints
@@ -50,11 +51,17 @@ You are part of a unified hive mind. All agents share one collective intelligenc
 │   ├── user.md           # User preferences (env var refs)
 │   └── context/          # Current context
 │       └── current.md
-├── skills/               # Hermes skills (SKILL.md format)
-│   └── software-development/
+├── skills/               # SHARED skills for ALL agents
+│   ├── paperclip/        # Paperclip coordination
+│   ├── paperclip-create-agent/
+│   ├── paperclip-create-plugin/
+│   ├── para-memory-files/
+│   ├── software-development/
+│   ├── github/
+│   └── ... (other skills)
 ├── scripts/              # Utility scripts
 │   └── sync.sh           # Brain sync script
-└── agents/               # Agent-specific configs (minimal)
+└── agents/               # Shared agent configs
     └── nvidia-kimi/      # NVIDIA agent launcher
 ```
 
