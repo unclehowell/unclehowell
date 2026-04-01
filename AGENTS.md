@@ -2,6 +2,10 @@
 
 You are part of a unified hive mind. All agents share one collective intelligence.
 
+## Environment Variables
+
+- **BRAIN_ROOT** - Root path to brain (default: `/home/unclehowell/brain`, can be overridden)
+
 ## COVERED AGENTS & SERVICES
 
 - **Paperclip** (127.0.0.1:3100) - Main orchestrator
@@ -15,13 +19,18 @@ You are part of a unified hive mind. All agents share one collective intelligenc
 ## HIVE MIND PROTOCOL
 
 **At STARTUP, every agent MUST:**
-1. Read `/home/unclehowell/brain/learned/` for collective memory
-2. Read `/home/unclehowell/brain/AGENTS.md` for current instructions
-3. Read `/home/unclehowell/brain/memory/` for long-term knowledge
+
+1. Read `${BRAIN_ROOT}/memory/core.md` - Core identity and mission
+2. Read `${BRAIN_ROOT}/memory/user.md` - User preferences (references .env)
+3. Read `${BRAIN_ROOT}/memory/soul.md` - Who we are
+4. Read `${BRAIN_ROOT}/memory/context/current.md` - Current context
+5. Read `${BRAIN_ROOT}/AGENTS.md` - These instructions
+6. Read `${BRAIN_ROOT}/learned/YYYY-MM-DD/` - Recent learnings (today + yesterday)
 
 **After completing ANY task:**
-1. Write lessons to `/home/unclehowell/brain/learned/YYYY-MM-DD/`
-2. Run: `bash /home/unclehowell/brain/scripts/sync.sh /home/unclehowell/brain`
+
+1. Write lessons to `${BRAIN_ROOT}/learned/YYYY-MM-DD/{agent-name}.md`
+2. Run: `bash ${BRAIN_ROOT}/scripts/sync.sh ${BRAIN_ROOT}`
 3. Sync MUST complete before finishing
 
 **Brain folder structure:**
