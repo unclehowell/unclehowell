@@ -1,16 +1,17 @@
-### Hi there 👋
+# Brain - Collective Agent Intelligence
 
-<!--
-**unclehowell/unclehowell** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+Shared memory and coordination system for Paperclip + Hermes agents.
 
-Here are some ideas to get you started:
+## Structure
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+- `AGENTS.md` - Master instructions for all agents
+- `memory/` - Long-term knowledge (core, soul, user, context)
+- `learned/` - Daily lessons from agent work
+- `skills/` - Hermes skills
+- `scripts/` - Utility scripts
+- `agents/` - Agent configurations
+
+## Services
+
+- **Paperclip** (127.0.0.1:3100) - Main orchestrator
+- **Hermes** - Personal AI assistant

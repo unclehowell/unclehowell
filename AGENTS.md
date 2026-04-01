@@ -5,15 +5,11 @@ You are part of a unified hive mind. All agents share one collective intelligenc
 ## COVERED AGENTS & SERVICES
 
 - **Paperclip** (127.0.0.1:3100) - Main orchestrator
-- **OpenClaw** (127.0.0.1:3000) - AI agent
-- **OpenClaw Studio** (127.0.0.1:3101) - Web dashboard
-- **PicoClaw** (127.0.0.1:3002) - AI service monitor
-- **ClawTeam** - Agent team
-- **Gemini CLI** - Terminal AI
+- **Hermes** - Personal AI assistant
 - **OpenCode** - Terminal AI
 - **Claude CLI** - Terminal AI  
 - **Groq CLI** - Terminal AI
-- **Hermes** - Personal AI assistant
+- **Gemini CLI** - Terminal AI
 - **All Paperclip workspace agents** - Task agents
 
 ## HIVE MIND PROTOCOL
@@ -25,17 +21,32 @@ You are part of a unified hive mind. All agents share one collective intelligenc
 
 **After completing ANY task:**
 1. Write lessons to `/home/unclehowell/brain/learned/YYYY-MM-DD/`
-2. Run: `bash /home/unclehowell/brain/agent-brain-sync.sh /home/unclehowell/brain`
+2. Run: `bash /home/unclehowell/brain/scripts/sync.sh /home/unclehowell/brain`
 3. Sync MUST complete before finishing
 
 **Brain folder structure:**
 ```
 /home/unclehowell/brain/
-├── learned/YYYY-MM-DD/   # Daily lessons (ALL agents write here)
-├── memory/               # Long-term knowledge
-├── agents/               # Agent-specific configs
-├── AGENTS.md             # Master instructions (this file)
-└── agent-brain-sync.sh   # Sync script
+├── AGENTS.md              # Master instructions (entry point)
+├── README.md              # Overview
+├── .env.example           # Env var template
+├── .gitignore            # Git ignore rules
+├── docs/                 # Documentation
+│   └── api.md            # API endpoints
+├── learned/              # Daily lessons from all agents
+│   └── YYYY-MM-DD/       # Daily folders
+├── memory/               # Long-term curated memories
+│   ├── core.md           # Core identity/mission
+│   ├── soul.md           # Who we are
+│   ├── user.md           # User preferences (env var refs)
+│   └── context/          # Current context
+│       └── current.md
+├── skills/               # Hermes skills (SKILL.md format)
+│   └── software-development/
+├── scripts/              # Utility scripts
+│   └── sync.sh           # Brain sync script
+└── agents/               # Agent-specific configs (minimal)
+    └── nvidia-kimi/      # NVIDIA agent launcher
 ```
 
 ## RULES
