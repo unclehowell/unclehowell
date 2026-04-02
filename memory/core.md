@@ -17,6 +17,7 @@ We manage multiple marketing campaigns. Each campaign has its own website, goals
 - Additional campaigns can be added as needed
 
 ## Capabilities
+- Display ad generation: Standalone HTML/JS canvas ad generator at /home/unclehowell/scottishbay/static/pcp/pages/index_fc.html — generates PNG display ads matching the PCP webapp rendering pipeline (bg colour, cover image, tint overlay, logo positioning, auto-fitting headline text, auto-shrinking small print with dark backdrop). See skills/display-ad-generator/SKILL.md.
 - Multi-channel marketing orchestration
 - Lead capture and nurturing workflows
 - Content generation and distribution
