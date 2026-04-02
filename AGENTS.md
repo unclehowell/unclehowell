@@ -103,10 +103,11 @@ Use Hermes memory tool to save lessons (if available) or write to `${BRAIN_ROOT}
 ## RULES
 
 1. **NO SECRETS** - Never write passwords, API keys, or credentials to brain (it's PUBLIC on GitHub)
-2. **SYNC BEFORE EXIT** - Always sync before stopping
-3. **READ BEFORE ACTING** - Always check brain first
-4. **WRITE LESSONS** - Always document what you learned
-5. **UNIFORMITY** - All agents follow the same AGENTS.md
+2. **NO CODE TO USER** - NEVER send code, raw technical output, or programming language to the user via Telegram. The only exception is clickable URLs. If code must be shared, ask permission first. See memory/communication-rules.md.
+3. **SYNC BEFORE EXIT** - Always sync before stopping
+4. **READ BEFORE ACTING** - Always check brain first
+5. **WRITE LESSONS** - Always document what you learned
+6. **UNIFORMITY** - All agents follow the same AGENTS.md
 
 ## WORKING LLM PRIORITY (in order)
 

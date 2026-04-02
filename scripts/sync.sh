@@ -1,31 +1,55 @@
 #!/bin/bash
-# Brain Sync Service - Syncs brain folder to GitHub
-# Run this via cron or systemd timer
+# Brain Sync Service - Safely syncs brain folder to GitHub
+# Pulls latest, merges, commits local changes, and pushes
+# Usage: bash /home/unclehowell/brain/scripts/sync.sh
+# Can be sourced by any agent
+
+set -euo pipefail
 
 BRAIN_DIR="${BRAIN_DIR:-/home/unclehowell/brain}"
-GITHUB_REPO="https://github.com/unclehowell/brain.git"
 BRANCH="main"
 
 cd "$BRAIN_DIR" || exit 1
 
-echo "=== Brain Sync: $(date) ==="
+echo "[brain-sync] Sync started at $(date)"
 
-# Pull latest changes first
-git fetch origin
-git reset --hard origin/$BRANCH 2>/dev/null || true
+# 1. Pull latest without destroying local changes (rebase instead of reset --hard)
+echo "[brain-sync] Fetching latest..."
+git fetch origin "$BRANCH" 2>/dev/null || true
 
-# Add all changes (memory, skills, scripts, archived learnings)
-git add -A
+# Check if there are remote changes
+REMOTE_HEAD=$(git rev-parse "origin/$BRANCH" 2>/dev/null || echo "")
+LOCAL_HEAD=$(git rev-parse HEAD 2>/dev/null || echo "")
 
-# Check if there are changes
-if git diff --cached --quiet; then
-    echo "No changes to sync"
-    exit 0
+if [ "$REMOTE_HEAD" != "$LOCAL_HEAD" ] && [ -n "$REMOTE_HEAD" ]; then
+    echo "[brain-sync] Remote has changes, pulling..."
+    git stash -m "pre-sync stash" 2>/dev/null || true
+    git pull --rebase origin "$BRANCH" 2>/dev/null || {
+        echo "[brain-sync] Rebase failed, trying merge..."
+        git merge --no-edit origin/"$BRANCH" 2>/dev/null || {
+            echo "[brain-sync] Merge conflict detected, keeping local changes"
+            git merge --abort 2>/dev/null || true
+        }
+    }
+    git stash pop 2>/dev/null || true
 fi
 
-# Commit and push
-COMMIT_MSG="Brain update: $(date '+%Y-%m-%d %H:%M')"
-git commit -m "$COMMIT_MSG" || exit 0
-git push origin $BRANCH
+# 2. Stage all changes
+git add -A
 
-echo "Brain synced to GitHub: $COMMIT_MSG"
+# 3. Check if there are changes to commit
+if git diff --cached --quiet && git diff --cached --staged --quiet 2>/dev/null; then
+    echo "[brain-sync] No changes to commit"
+else
+    COMMIT_MSG="Brain update: $(date '+%Y-%m-%d %H:%M')"
+    git commit -m "$COMMIT_MSG" || true
+    echo "[brain-sync] Committed: $COMMIT_MSG"
+fi
+
+# 4. Push
+echo "[brain-sync] Pushing to GitHub..."
+git push origin "$BRANCH" 2>/dev/null && echo "[brain-sync] Pushed successfully" || {
+    echo "[brain-sync] Push failed (may need authentication or has conflicts)"
+}
+
+echo "[brain-sync] Done at $(date)"
