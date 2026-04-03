@@ -11,6 +11,7 @@ This directory contains documentation for all CLI tools and integrations.
 | Cloudflare | `~/.cloudflared/` | [cloudflare.md](cloudflare.md) |
 | Short.io | `~/short.io` | [shortio.md](shortio.md) |
 | Hermes | `/opt/hermes/config/` (on AWS) | [hermes.md](hermes.md) |
+| Voice | faster-whisper (local) | [voice-opencode.md](voice-opencode.md) |
 
 ## SSH Keys
 
@@ -67,4 +68,11 @@ cloudflared tunnel list
 ```bash
 ssh -i ~/.ssh/paperclip-hermes-nvidia-key.pem ubuntu@13.135.142.244
 cat /opt/hermes/config/integrations.json
+```
+
+### Voice Input
+```bash
+voice
+# Or full path:
+/home/unclehowell/bin/voice-oc
 ```
