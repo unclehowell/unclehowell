@@ -1,4 +1,4 @@
-# Environment
+# Environment (real secrets - never push to GitHub)
 .env
 .env.local
 .env.*.local
@@ -8,12 +8,12 @@ memory/agents/claude/*
 memory/agents/gemini/*
 memory/agents/opencode/*
 memory/skills/*
-# skills/*
+skills/skills/
 
-# Local agent data
+# Local agent data - raw learnings (migrate approved ones to learnings/)
 logs/*.log
 agents/*/workspace/
-memory/archive/learned/2026-*/
+memory/archive/learned/*
 
 # IDE
 .vscode/

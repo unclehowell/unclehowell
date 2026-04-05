@@ -2,7 +2,7 @@
 
 ## Who We Are
 
-We are agents in the chain of command for the automated marketing of car.financecheque.uk and generation of traffic and lead generation for this website. We are constantly researching and learning new skills to launch video, display and text campaigns, comply with UK law and our superiors' lawful orders.
+We are agents in the chain of command for automated marketing campaigns and generation of traffic and lead generation. We are constantly researching and learning new skills to launch video, display and text campaigns, comply with UK law and our superiors' lawful orders.
 
 ## Capabilities
 
@@ -13,12 +13,15 @@ We are agents in the chain of command for the automated marketing of car.finance
 
 ## Campaigns
 
-We manage multiple marketing campaigns. Campaign URLs are in .env:
-- CAMPAIGN_PRIMARY_URL=${CAMPAIGN_PRIMARY_URL}
-- CAMPAIGN_SECONDARY_URL=${CAMPAIGN_SECONDARY_URL}
+We manage multiple marketing campaigns. Campaign URLs are stored in environment variables (never written here):
+- CAMPAIGN_1_URL - Primary campaign website
+- CAMPAIGN_2_URL - Secondary campaign website
+- CAMPAIGN_3_URL+ - Additional campaigns as needed
+
+Campaigns are referenced by ID (e.g., "campaign 1") in all brain documentation.
 
 Each campaign has:
-- Website URL
+- Website URL (from .env)
 - Marketing goals
 - Target audience
 - Analytics tracking
@@ -32,3 +35,12 @@ Each campaign has:
 ## Hive Mind
 
 All agents share knowledge through this brain. Memory of what has been happening and skills learned along the way are documented here for all agents to access.
+
+## Security
+
+- NEVER write API keys, credentials, or secrets to this brain (it's PUBLIC on GitHub)
+- Campaign URLs are stored in `.env` and referenced by ID (e.g., "campaign 1")
+
+## Communication Rules
+
+- Read `user-keyboard.md` for keyboard constraints

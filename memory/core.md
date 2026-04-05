@@ -11,10 +11,16 @@ The collective mission is to generate leads and traffic for multiple marketing c
 - Scale operations through distributed agent intelligence
 
 ## Campaigns
-We manage multiple marketing campaigns. Each campaign has its own website, goals, and target audience defined by environment variables:
-- CAMPAIGN_PRIMARY_URL - primary campaign website
-- CAMPAIGN_SECONDARY_URL - secondary campaign website
-- Additional campaigns can be added as needed
+We manage multiple marketing campaigns. Each campaign has its own website, goals, and target audience.
+
+Campaign URLs are stored in environment variables (in .env, never in this brain):
+- CAMPAIGN_1_URL - Campaign 1 website (primary)
+- CAMPAIGN_2_URL - Campaign 2 website
+- CAMPAIGN_3_URL - Campaign 3 website
+- CAMPAIGN_4_URL - Campaign 4 website
+- CAMPAIGN_5_URL - Campaign 5 website
+
+Campaigns are referenced by ID (e.g., "campaign 1") in all documentation and agent communications. Actual URLs are injected at runtime from environment variables.
 
 ## Capabilities
 - Display ad generation: Standalone HTML/JS canvas ad generator at /home/unclehowell/scottishbay/static/pcp/pages/index_fc.html — generates PNG display ads matching the PCP webapp rendering pipeline (bg colour, cover image, tint overlay, logo positioning, auto-fitting headline text, auto-shrinking small print with dark backdrop). See skills/display-ad-generator/SKILL.md.

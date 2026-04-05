@@ -36,7 +36,8 @@ Use Hermes memory tool to save learnings:
 
 - **Claude reads:** `CLAUDE.md` → `AGENTS.md` → `memory/`
 - **Shared memory:** `${BRAIN_ROOT}/memory/`
-- **Archived learnings:** `${BRAIN_ROOT}/memory/archive/learned/`
+- **Raw learnings:** `${BRAIN_ROOT}/memory/archive/learned/` (gitignored)
+- **Approved learnings:** `${BRAIN_ROOT}/learnings/` (public)
 
 ## Running Tasks
 

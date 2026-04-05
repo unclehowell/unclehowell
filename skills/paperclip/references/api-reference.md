@@ -366,23 +366,6 @@ POST /api/companies/{companyId}/logo     — upload logo (multipart, field: "fil
 1. `POST /api/companies/{companyId}/logo` with file upload → returns `{ assetId }`.
 2. `PATCH /api/companies/{companyId}` with `{ "logoAssetId": "<assetId>" }`.
 
-## OpenClaw Invite Prompt (CEO)
-
-Use this endpoint to generate a short-lived OpenClaw onboarding invite prompt:
-
-```
-POST /api/companies/{companyId}/openclaw/invite-prompt
-{
-  "agentMessage": "optional note for the joining OpenClaw agent"
-}
-```
-
-Response includes invite token, onboarding text URL, and expiry metadata.
-
-Access is intentionally constrained:
-- board users with invite permission
-- CEO agent only (non-CEO agents are rejected)
-
 ---
 
 ## Setting Agent Instructions Path
@@ -608,14 +591,6 @@ Terminal states: `done`, `cancelled`
 | GET    | `/api/goals/:goalId`                 | Goal details       |
 | POST   | `/api/companies/:companyId/goals`    | Create goal        |
 | PATCH  | `/api/goals/:goalId`                 | Update goal        |
-| POST   | `/api/companies/:companyId/openclaw/invite-prompt` | Generate OpenClaw invite prompt (CEO/board only) |
-
-### Approvals, Costs, Activity, Dashboard
-
-| Method | Path                                         | Description                        |
-| ------ | -------------------------------------------- | ---------------------------------- |
-| GET    | `/api/companies/:companyId/approvals`        | List approvals (`?status=pending`) |
-| POST   | `/api/companies/:companyId/approvals`        | Create approval request            |
 | POST   | `/api/companies/:companyId/agent-hires`      | Create hire request/agent draft    |
 | GET    | `/api/approvals/:approvalId`                 | Approval details                   |
 | GET    | `/api/approvals/:approvalId/issues`          | Issues linked to approval          |

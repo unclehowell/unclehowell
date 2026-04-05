@@ -44,7 +44,7 @@
 
 ### Model Preferences (Priority Order)
 1. Local Ollama (smollm:135m) - fastest, free
-2. OpenClaw Gateway - multi-model routing  
+2. Hermes Gateway - multi-model routing  
 3. Paperclip - visual/agentic tasks
 4. Cloud APIs - only when local insufficient
 
@@ -52,7 +52,7 @@
 
 ### Available Services (Local)
 - Ollama: http://localhost:11434 (smollm:135m)
-- OpenClaw Gateway: http://localhost:18789
+- Hermes Gateway: http://localhost:18789
 - Paperclip: http://localhost:3100
 - Jarvis/vLLM: http://localhost:8000
 - Model Health Monitor: http://localhost:8082

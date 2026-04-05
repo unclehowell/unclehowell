@@ -1,7 +1,7 @@
 # Current Context
 
 ## Project
-Marketing campaign orchestration (CAMPAIGN_PRIMARY_URL: car.financecheque.uk)
+Marketing campaign orchestration (campaign 1 primary)
 
 ## Focus Areas
 - Lead generation for automotive finance products (primary campaign)
