@@ -216,6 +216,11 @@ approvals:
   timeout: 0
 ```
 
+After changing, **restart the gateway** for the setting to take effect:
+```bash
+sudo systemctl restart hermes-gateway
+```
+
 **WARNING:** Only use `mode: off` on personal/trusted machines. Combined with `GATEWAY_ALLOW_ALL_USERS=true`, this gives the agent full shell access with zero human-in-the-loop — no warnings, no confirmations.
 
 ## Roll Call Video Generator
