@@ -1,8 +1,8 @@
 ---
 name: recursive-self-improvement
-description: Patterns for compounding self-improvement in AI coding agents. Covers feedback loop design, knowledge accumulation, skill evolution, prompt optimization, and safe self-modification through sandboxed validation cycles.
-version: 1.0.0
-author: Hermes Agent
+description: Patterns for compounding self-improvement in AI coding agents. Covers multi-path exploration loops, three-tier memory with decay, programmatic prompt optimization, skill promotion pipeline, and safe self-modification through sandboxed validation cycles.
+version: 2.0.0
+author: Hermes Agent (enhanced with 2024-2026 research)
 metadata:
   hermes:
     tags: [self-improvement, meta-cognition, optimization, learning, feedback-loops]
@@ -13,7 +13,9 @@ metadata:
 
 ## Core Principle
 
-Compounding improvement occurs when gains in one subsystem unlock safer, more aggressive improvements in others. Each improvement raises the baseline, enabling the next level. Build **closed-loop validation** and **permanent anchors** that make the agent progressively better with every task.
+Compounding improvement occurs when gains in one subsystem unlock safer, more aggressive improvements in others. Build **closed-loop validation** and **permanent anchors** that make the agent progressively better with every task.
+
+**Production pattern:** Constrained, metric-gated evolution with versioned memory and automated evaluation. NOT unconstrained self-rewriting.
 
 ---
 
@@ -34,76 +36,111 @@ Each stage feeds the next:
 
 ---
 
-## Pattern 1: Tight Feedback Loops
+## Pattern 1: Multi-Path Feedback Loops (v2)
 
+### The TDD-Driven Loop
 Every task should follow this cycle:
 1. **Generate** — Produce output (code, plan, analysis)
 2. **Execute** — Run it in a sandboxed environment
 3. **Evaluate** — Measure against objective criteria (tests pass? lint clean? matches spec?)
-4. **Refine** — If it fails, diagnose, fix, repeat
+4. **Refine** — If it fails, parse errors into structured failure signatures, NOT raw dumps
 5. **Archive** — Save the successful pattern for future reuse
 
 **Speed matters:** < 10s for unit-level loops, < 2m for integration loops.
 
-```python
-# Example: self-debugging loop
-for attempt in range(3):
-    terminal("pytest tests/ -q")  # Execute
-    if exit_code == 0:
-        break                       # Evaluate: pass
-    # Diagnose, refine, retry
-```
+### Multi-Path Exploration (New — 2024-2025 research)
+For complex problems, use **parallel candidate generation**:
+- Generate 3-5 candidate solutions
+- Score via automated judges (linters, test suites, complexity metrics)
+- Merge strongest traits from each candidate
+- Avoid sequential single-path loops which plateau quickly
+
+### Adaptive Stopping Criteria (New)
+Hard iteration caps waste compute. Use confidence thresholds:
+- Stop when Δ(pass_rate) < 2% over 2 iterations
+- OR when resource/cost budget is exhausted
+- Cap recursion depth at 3-5 self-mod cycles per session
 
 ---
 
-## Pattern 2: Knowledge Accumulation
+## Pattern 2: Three-Tier Memory with Decay
 
-### Three-Tier Memory
-| Tier | What | How |
-|------|------|-----|
-| **Facts** | Durable domain knowledge | Save to brain files / Hermes memory tool |
-| **Procedures** | How to do things | Create/update skills |
-| **Meta** | What improves performance | Update this skill's knowledge |
+### Tier Structure
+| Tier | What | TTL | How |
+|------|------|-----|-----|
+| **Episodic** | Recent task traces, tool calls | 24-72h | Hermes memory tool, session history |
+| **Semantic** | Conceptual mappings, API behaviors, patterns | 30d+ | Brain files, skills |
+| **Procedural** | Validated workflows, skills | Permanent (versioned) | Skill registry |
 
-### When to Archive
-After every non-trivial task (5+ tool calls):
-- What worked (successful patterns)
-- What failed (errors and root causes)
-- What was discovered (environment facts, API quirks)
-- What was created (new skills, updated files)
+### Memory Decay Strategy
+Utility score per memory: `score = usage_frequency × success_rate × recency_factor`
 
-### Decay and Maintenance
-Weekly, review accumulated knowledge:
-- Supersede outdated facts (don't delete — mark `status: superseded`)
-- Identify patterns that appear 3+ times → extract to a new rule/skill
-- Remove contradictions and garbage
+- Purge memories with score < 0.2
+- Run weekly summarization: convert raw traces into compact principles
+- Enforce strict token budgets per retrieval tier
+- **Never delete facts** — mark `status: superseded` with `superseded_by` link
 
----
-
-## Pattern 3: Prompt Engineering Through Experience
-
-### Dynamic Few-Shot Retrieval
-Before tackling a task, search past sessions and brain files for:
-- Similar tasks and how they were solved
-- Common pitfalls and how they were avoided
-- Working code patterns in the same codebase
-
-```
-session_search(query="similar task keywords OR related terms")
-# Review what worked, extract patterns
-```
-
-### Prompt Versioning
-Track which prompting strategies work best:
-- Direct instruction vs. step-by-step
-- Role-playing vs. plain language
-- Few-shot examples vs. zero-shot
-
-When you find a strategy that consistently works better for a task type, update relevant skills.
+### What to Store
+- Verified code patterns and tool invocation traces
+- Failure signatures and root cause analyses
+- Environment facts and API quirks
+- Task-type → strategy mappings
+- Successful prompt templates
 
 ---
 
-## Pattern 4: Test-First Safety
+## Pattern 3: Skill Evolution Pipeline
+
+### The Promotion Pipeline
+```
+Trace → Abstract → Template → Validate → Version
+```
+
+### When to Create a New Skill
+- Pattern achieves ≥85% success across ≥3 distinct tasks
+- OR reduces token/latency cost by >20%
+- OR overcomes a non-trivial error through investigation
+
+### When to Update a Skill
+- Used and found missing steps or incorrect commands
+- Hit issues not covered by the "Pitfalls" section
+- Environment changed (files moved, APIs updated)
+- New best practice discovered that contradicts current guidance
+
+### Skill Evolution Checklist
+- [ ] Extract reusable pattern from successful trajectory
+- [ ] Include exact commands, file paths, and output formats
+- [ ] Add "Pitfalls" section with known gotchas
+- [ ] Include verification steps
+- [ ] Set version number
+- [ ] Link to related skills
+
+---
+
+## Pattern 4: Programmatic Prompt Optimization
+
+### Versioned Prompt Registry
+- Track which prompting strategies work best per task type
+- Use diff tracking — record what changed and why
+- Avoid prompt bloat > 80% of context window; offload examples to external memory
+
+### Strategy Tracking
+| Strategy | Best For | Notes |
+|----------|----------|-------|
+| Direct instruction | Simple, well-defined tasks | Lowest token cost |
+| Step-by-step with stage gates | Complex feature implementation | Prevents scope creep |
+| Few-shot with retrieval | Domain-specific tasks | Higher quality, more tokens |
+| Role-playing | Creative/generative tasks | Variable effectiveness |
+
+### Self-Optimizing Meta-Prompts
+After each failure cluster:
+1. Auto-generate updated few-shot examples or constraint clauses
+2. Test against next similar task
+3. Promote winners based on empirical pass rates
+
+---
+
+## Pattern 5: Test-First Safety
 
 The most important anchor for self-improvement:
 
@@ -113,90 +150,91 @@ Can refactor aggressively → Tests catch regressions → More confidence →
 Bolder improvements → Better code → Cycle repeats
 ```
 
-**Every improvement to the agent's own code, scripts, or configs should have tests first.**
-
----
-
-## Pattern 5: Skill Evolution
-
-### When to Create a New Skill
-- Successfully completed a complex task (5+ tool calls)
-- Discovered a non-trivial workflow
-- Overcame an error through investigation
-- Found a pattern worth reusing
-
-### When to Update a Skill
-- Used a skill and found missing steps
-- Used a skill and hit issues not covered
-- Found a pitfall the skill didn't warn about
-- Environment changed (files moved, APIs updated)
-
-### The Improvement Cycle
-```
-Use skill → find gaps → patch skill immediately → 
-next use is better → compound improvement
-```
+**Every improvement to the agent's own code, scripts, or configs must have tests first.**
 
 ---
 
 ## Pattern 6: Safety and Guardrails
 
-Recursive self-improvement requires guardrails:
-
+### Strict Execution Boundaries
 | Guardrail | Implementation |
 |-----------|---------------|
 | **Sandboxed execution** | Use `execute_code` and `terminal` with isolated contexts |
-| **Diff validation** | Review changes before applying. Never skip review for self-modifications. |
-| **Version control** | Git commit before major changes. Can revert if something breaks. |
-| **Human gates** | Production changes require approval. Agent handles dev/test autonomously. |
-| **Convergence criteria** | Stop after 3 consecutive successes, or no improvement over N iterations |
-| **No reward hacking** | Don't delete tests to pass. Don't skip quality gates. Enforce coverage floors. |
+| **Pre-commit gates** | Static analysis, type checking, linting, security scans before any self-authored code |
+| **Diff validation** | Review changes before applying. Never skip review for self-modifications |
+| **Version control** | Git commit before major changes. Can revert if something breaks |
+| **Human gates** | Production changes require approval. Agent handles dev/test autonomously |
+| **Circuit breakers** | Auto-revert if post-modification regression > 5% |
+| **Differential updates** | Apply patches, not full rewrites. Require improvement in ≥2 metrics |
+| **No reward hacking** | Don't delete tests to pass. Don't skip quality gates. Enforce coverage floors |
+| **Whitelist tools** | Cap which tools each subagent can access |
+
+### Convergence Criteria
+Stop improvement loops when:
+- 3 consecutive successes achieved, OR
+- No measurable improvement over N iterations, OR
+- Resource budget exhausted
 
 ---
 
 ## Pattern 7: Self-Diagnosis Protocol
 
-When the agent encounters a problem it hasn't seen before:
+When encountering a novel problem:
 
-1. **Classify** — Is this a code bug, config issue, environment problem, or knowledge gap?
+1. **Classify** — Code bug, config issue, environment problem, or knowledge gap?
 2. **Isolate** — Create minimal reproduction. What's the smallest failing case?
-3. **Investigate** — Follow `systematic-debugging` skill. Root cause before fixing.
-4. **Solve** — Fix at the source, not the symptom.
-5. **Encode** — Save the solution pattern so this specific problem never costs time again.
+3. **Investigate** — Root cause before fixing (follow `systematic-debugging` skill)
+4. **Solve** — Fix at the source, not the symptom
+5. **Encode** — Save the solution pattern so this specific problem never costs time again
 
 ---
 
-## Pattern 8: Compounding Dynamics
+## Pattern 8: Longitudinal Compounding Metrics
 
-### How Subsystems Reinforce Each Other
+Track improvement across ≥3 orthogonal dimensions simultaneously:
 
-| If you improve... | It makes these better... |
-|-------------------|--------------------------|
-| Test coverage | Refactoring safety, debugging speed |
-| Debugging skills | Knowledge base, future speed |
-| Prompt quality | Token efficiency, more iterations |
-| Tool knowledge | Problem-solving breadth |
-| Code quality | Review speed, maintenance cost |
-| Memory hygiene | Recall accuracy, context relevance |
+| Metric | Why |
+|--------|-----|
+| **Pass rate** (task completion) | Core capability |
+| **Token cost per task** | Efficiency |
+| **Iteration count** | Directness |
+| **Regression rate** | Stability |
+| **Time to first fix** | Debugging speed |
+| **Memory utilization** | Knowledge effectiveness |
+
+**Compounding requires improvement across ≥2 dimensions simultaneously.**
+Use moving averages (7/30-day) to filter noise and identify true inflection points.
 
 ### The Compound Effect
 ```
-Week 1: Basic tools established
-Week 2: Skills improved from gaps found → 20% faster
-Week 4: Knowledge accumulation reduces repeat errors → 40% faster
-Week 8: Prompt optimization saves tokens → 60% more iterations per budget
+Week 1:  Basic tools established
+Week 2:  Skills improved from gaps found → 20% faster
+Week 4:  Knowledge accumulation reduces repeat errors → 40% fewer iterations
+Week 8:  Prompt optimization saves tokens → 60% more iterations per budget
 Week 12: Meta-learning converges → agent approaches optimal strategy
 ```
+
+---
+
+## Pattern 9: Meta-Learning (New)
+
+Agents should learn to adjust their own:
+- **Search breadth** — How many alternatives to explore
+- **Reflection depth** — How much analysis to do before acting
+- **Tool selection** — Which tools to try first based on task type
+- **Compute allocation** — Based on task difficulty signals (repo size, ambiguity, dependency density)
+
+Use lightweight decision rules: if task complexity is high → more exploration; if low → fast execution.
 
 ---
 
 ## Usage
 
 During any task:
-1. **Before:** Search for relevant past solutions and patterns
-2. **During:** Archive durable facts and discoveries immediately
-3. **After:** Create/update skills, sync knowledge to brain
-4. **Weekly:** Review accumulated knowledge, supersede stale facts, extract new patterns
+1. **Before:** Search for relevant past solutions (session_search) and load matching skills
+2. **During:** Archive durable facts immediately, use structured error parsing on failures
+3. **After:** Create/update skills, sync knowledge to brain, update relevant memory
+4. **Weekly:** Review accumulated knowledge, update utility scores, supersede stale facts, extract new patterns
 
 ---
 
@@ -207,6 +245,7 @@ Every task teaches something
 Save what works, learn from what doesn't
 Guardrails enable bolder improvement
 Knowledge compounds across sessions
+Track orthogonal metrics — don't game one metric at the expense of others
 ```
 
 **The agent that learns from every task is orders of magnitude more effective than one that doesn't.**
