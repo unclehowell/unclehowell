@@ -156,3 +156,4 @@ API keys are stored in `/home/unclehowell/.hermes/.env` - NEVER copy them here!
 - **MAX 25% CPU** per process - The cpu-limiter.service enforces this
 - If you need more, you're doing something wrong
 - Background services are throttled to 10% CPU
+test change from aws2
