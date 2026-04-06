@@ -6,7 +6,9 @@
 
 set -euo pipefail
 
-BRAIN_DIR="${BRAIN_DIR:-/home/unclehowell/brain}"
+# Auto-detect brain dir based on home directory
+user_home=$(eval echo ~$(whoami))
+BRAIN_DIR="${BRAIN_DIR:-${user_home}/brain}"
 BRANCH="main"
 
 cd "$BRAIN_DIR" || exit 1
