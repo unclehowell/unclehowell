@@ -70,7 +70,7 @@ bash /home/unclehowell/brain/scripts/sync.sh
 ## Wiring (do this once)
 
 1. Symlink brain skills into Hermes profile skills dir:
-   ln -sf /home/unclehowell/brain/skills /home/unclehowell/.hermes/profiles/{profile}/skills/_brain
+   ln -sf ~/brain/skills /home/ubuntu/.hermes/profiles/{profile}/skills/_brain
 
    CRITICAL: The symlink must go into the PROFILE skills dir (~/.hermes/profiles/*/skills/),
    NOT into ~/.hermes/skills/. The profile dir is where Hermes actually discovers skills.
