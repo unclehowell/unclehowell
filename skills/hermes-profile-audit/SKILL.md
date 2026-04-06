@@ -93,6 +93,32 @@ For each profile that has a unique bot:
 echo "TELEGRAM_BOT_TOKEN=bot:full_token_here" >> ~/.hermes/profiles/<profile>/.env
 ```
 
+### Step 5b: Verify config key names (CRITICAL)
+The gateway config parser uses specific key names. Common mismatches:
+- **`bot_token:` is WRONG** — must be `token:`
+- **Missing `allowed_users:`** — gateway silently rejects messages from unknown users
+- **`enabled: true`** must be present in the telegram section
+
+Correct telegram section format:
+```yaml
+telegram:
+  enabled: true
+  token: "bot:123456:ABC..."   # NOT bot_token
+  allowed_users:
+    - 5837518218               # User chat_id
+```
+
+The env var in .env must be named `TELEGRAM_BOT_TOKEN` (gateway reads this via config interpolation).
+
+**Symptom of wrong key name:** Gateway says "No messaging platforms enabled" even though `enabled: true` is in the config. Fix: `sed -i 's/bot_token:/token:/g' ~/.hermes/profiles/*/config.yaml`
+
+### Step 5c: Verify pairing status
+If a bot responds with "I don't recognize you yet! Here's your pairing code:", the user hasn't been approved yet:
+```bash
+hermes pairing approve telegram <CODE>
+```
+Pairing codes expire quickly — the gateway agent must be running continuously for the approval to stick before the user reconnects.
+
 ### Step 6: Restart gateways after changes
 ```bash
 # Restart the specific profile gateway
