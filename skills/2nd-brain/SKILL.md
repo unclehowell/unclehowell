@@ -6,8 +6,11 @@ description: Central brain — persistent memory, cross-agent learning, session 
 # 2nd Brain — Persistent Memory System
 
 ## What This Is
-/home/unclehowell/brain/ is the shared intelligence between all agents on this machine.
+`~/brain/` (resolves to `/home/ubuntu/brain/` on this server) is the shared intelligence between all agents on this machine.
 Everything we learn flows through here.
+
+**Important:** The brain path may vary by user profile. Always use `~/brain/` or `${BRAIN_ROOT}` rather than hardcoding `/home/unclehowell/brain/`.
+On this machine, the home directory is `/home/ubuntu`, not `/home/unclehowell`.
 
 ## Memory Architecture (3 tiers)
 
