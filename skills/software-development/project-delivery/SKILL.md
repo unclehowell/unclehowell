@@ -1,8 +1,8 @@
 ---
 name: project-delivery
 description: End-to-end project delivery methodology combining PRINCE2 governance, AI agent workflows, recursive self-improvement, and Honcho memory. Use for any multi-step project requiring structured delivery with quality gates, stage-gate progression, exception management, and learning capture. Supersedes standalone PRINCE2 for day-to-day work.
-version: 1.0.0
-author: Hermes Agent
+version: 1.1.0
+author: Hermes Agent (enhanced with PRINCE2 7th Edition updates, Benefits Realization Management, AI-optimized delivery patterns)
 metadata:
   hermes:
     tags: [project-management, delivery, prInce2, self-improvement, quality, stages]
