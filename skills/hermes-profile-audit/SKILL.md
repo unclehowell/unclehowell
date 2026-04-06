@@ -188,3 +188,62 @@ cat /proc/$PID/environ | tr '\0' '\n' | grep HERMES_HOME
 - The gateway process env (HERMES_HOME) must match where you expect sessions
 - `--replace` flag on gateway run kills any other gateway on the same bot
 - Multiple gateways can run if they use different bot tokens
+
+## Skip Pairing Codes — Allow All Users
+
+If bots respond with "I don't recognize you yet! Here's your pairing code:" for every DM, either:
+
+**Option A — Set GATEWAY_ALLOW_ALL_USERS=true in systemd service (fastest):**
+```ini
+[Service]
+Environment=GATEWAY_ALLOW_ALL_USERS=true
+```
+
+**Option B — Approve the user:**
+```bash
+hermes pairing approve telegram <CODE>
+```
+Pairing codes expire within minutes — the gateway must stay running for approval to stick. GATEWAY_ALLOW_ALL_USERS is the reliable approach for personal setups.
+
+## Disable Exec Approvals Permanently
+
+To eliminate interactive exec approval prompts ("This command is dangerous. Approve?"):
+
+```yaml
+# ~/.hermes/config.yaml
+approvals:
+  mode: off
+  timeout: 0
+```
+
+**WARNING:** Only use `mode: off` on personal/trusted machines. Combined with `GATEWAY_ALLOW_ALL_USERS=true`, this gives the agent full shell access with zero human-in-the-loop — no warnings, no confirmations.
+
+## Roll Call Video Generator
+
+Reusable script that generates a 5-second status card video and delivers it to Jellyfin:
+
+**Location:** `/home/ubuntu/.hermes/scripts/rollcall_video.py`
+
+**What it does:**
+1. Scans all hermes gateway processes + systemd services for agent status
+2. Creates a 1920x1080 PNG title card with Hermes green accent (#04da97), showing each agent with status icon
+3. Uses ffmpeg to render a 5-second H.264 MP4
+4. Copies to Jellyfin library: `/var/lib/jellyfin/root/default/Videos/Manim - Roll Call Status YYYYMMDD_HHMMSS.mp4`
+5. Triggers Jellyfin library scan via API
+
+**Usage:**
+```bash
+python3 /home/ubuntu/.hermes/scripts/rollcall_video.py
+```
+
+**Schedule as cron (every 4 hours):**
+```
+python3 /home/ubuntu/.hermes/scripts/rollcall_video.py
+```
+
+**Dependencies:** ffmpeg (system), Pillow (Python 3 — `pip install --break-system-packages Pillow`)
+
+**Jellyfin path note:** Videos dir must be writable by the running user:
+```bash
+sudo chown ubuntu:ubuntu /var/lib/jellyfin/root/default/Videos
+```
