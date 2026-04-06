@@ -21,9 +21,9 @@ On this machine, the home directory is `/home/ubuntu`, not `/home/unclehowell`.
 - fast, searchable, always injected into context
 
 ### Tier 2: Brain Files
-- /home/unclehowell/brain/memory/ — structured memory files
-- /home/unclehowell/brain/memory/archive/learned/ — dated lesson archives
-- synced to GitHub via /home/unclehowell/brain/scripts/sync.sh
+- ~/brain/memory/ — structured memory files
+- ~/brain/memory/archive/learned/ — dated lesson archives
+- synced to GitHub via ~/brain/scripts/sync.sh
 - accessible to ALL agents (hermes, claude, opencode, etc.)
 
 ### Tier 3: Skills  
