@@ -158,9 +158,12 @@ Uses `js/app-toggle.js` to sync checkbox to localStorage.
 **Site name:** `Finance Cheque UK` (changed from legacy `Hotspotβnβ`).
 **Version/placeholder:** Short git commit hash (e.g. `ef6c93f0c`), shown as the `<input>` placeholder.
 
-To rename branding, update BOTH locations in `index.html`:
-1. `<title>` tag: `<title>Finance Cheque UK</title>`
-2. Input element: `value="Finance Cheque UK"`, `name="Finance Cheque UK"`, `placeholder="<commit-hash>"`, `id="site-branding"`
+To hide the branding text while keeping the form structure intact (for nav alignment):
+```css
+.forminput[name] { color: rgba(255,255,255,0.0)!important; }
+.forminput[value] { color: rgba(255,255,255,0.0)!important; }
+.forminput::placeholder { color: rgba(255,255,255,0.0)!important; }
+```
 
 To get the commit hash: `cd /home/ubuntu/datro && git log -1 --format='%h'`
 
