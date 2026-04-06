@@ -1,0 +1,185 @@
+name: Consolidate Brain Memory
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # Run daily at 2 AM UTC
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  consolidate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Ensure full history is available if needed
+
+      - name: Setup Python (for consolidation script)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x' # Use a recent Python version
+
+      - name: Install dependencies
+        run: pip install requests google-api-python-client PyYAML
+
+      - name: Set up Environment Variables for Consolidation
+        run: |
+          echo "Attempting to find a Tier 1 API Key for consolidation..."
+          # The sync-brain.sh script uses providers.json. We'll need a way to find a valid key.
+          # For this workflow, we assume an environment variable like CONSOLIDATION_API_KEY is set.
+          # In a real setup, you might parse providers.json or have dedicated secrets.
+          # As a placeholder, we'll check for GROQ_API_KEY as a common Tier 1 provider.
+          if [ -n "$GROQ_API_KEY" ]; then
+            echo "CONSOLIDATION_API_KEY=$GROQ_API_KEY" >> $GITHUB_ENV
+            echo "Using GROQ_API_KEY for consolidation."
+          elif [ -n "$MISTRAL_API_KEY" ]; then
+            echo "CONSOLIDATION_API_KEY=$MISTRAL_API_KEY" >> $GITHUB_ENV
+            echo "Using MISTRAL_API_KEY for consolidation."
+          else
+            echo "::warning::No suitable API key found for consolidation. This job might fail without it."
+            # exit 1 # Decide if this should be a hard fail or soft warning
+          fi
+          echo "BRAIN_DIR=$HOME/brain" >> $GITHUB_ENV
+          echo "LEARNED_DIR=$HOME/brain/learned" >> $GITHUB_ENV
+          echo "MEMORY_FILE=$HOME/brain/memory/core.md" >> $GITHUB_ENV
+
+      - name: Run Consolidation Script
+        run: |
+          echo "Running brain consolidation script..."
+          # This script will need to:
+          # 1. Read all files in $LEARNED_DIR/*/*/*.md
+          # 2. Construct a prompt to distill these learnings into the core memory.
+          # 3. Use the CONSOLIDATION_API_KEY to call an LLM (e.g., OpenAI compatible endpoint).
+          # 4. Write the distilled output to $MEMORY_FILE.
+          # 5. Clean up old learned files if necessary (optional).
+          #
+          # For demonstration, we'll create a placeholder script snippet.
+          # A full Python script would be more complex.
+
+          # Create a dummy consolidation script for demonstration
+          mkdir -p $HOME/scripts
+          cat << EOF > $HOME/scripts/consolidate_brain.py
+import os
+import json
+import requests
+from datetime import datetime
+
+BRAIN_DIR = os.environ.get('BRAIN_DIR', '/home/runner/work/_temp/brain') # Adjust path for runner environment
+LEARNED_DIR = os.environ.get('LEARNED_DIR', os.path.join(BRAIN_DIR, 'learned'))
+MEMORY_FILE = os.environ.get('MEMORY_FILE', os.path.join(BRAIN_DIR, 'memory', 'core.md'))
+CONSOLIDATION_API_KEY = os.environ.get('CONSOLIDATION_API_KEY')
+
+# Assume a Tier 1 Provider URL, e.g., Groq or Mistral
+# If CONSOLIDATION_API_KEY is set, we can infer the provider or use a default.
+# For simplicity, let's use a generic OpenAI-compatible endpoint pattern
+LLM_API_URL = "https://api.groq.com/openai/v1/chat/completions" # Example URL
+
+def get_learned_content():
+    all_learnings = []
+    if not os.path.exists(LEARNED_DIR):
+        print(f"Learned directory not found: {LEARNED_DIR}")
+        return ""
+    
+    for root, _, files in os.walk(LEARNED_DIR):
+        for file in files:
+            if file.endswith(".md"):
+                filepath = os.path.join(root, file)
+                try:
+                    with open(filepath, 'r', encoding='utf-8') as f:
+                        content = f.read()
+                        all_learnings.append(f"--- Content from {os.path.relpath(filepath, LEARNED_DIR)} ---
+{content}
+")
+                except Exception as e:
+                    print(f"Error reading {filepath}: {e}")
+    return "
+".join(all_learnings)
+
+def distill_memory(learnings):
+    if not learnings:
+        print("No new learnings found to distill.")
+        return None
+
+    system_prompt = "You are a highly intelligent AI tasked with consolidating and distilling information into a core memory. Your goal is to maintain a concise, accurate, and evolving knowledge base. Rewrite and summarize the provided learnings to update the core memory. Focus on key facts, mission critical updates, and emergent patterns. Ensure the output is structured and directly usable as a knowledge base entry."
+    
+    user_prompt = f"Please distill the following new learnings into the core memory for the 'Uncle Howell' distributed brain. The output should be a markdown document suitable for updating the core memory file. Focus on conciseness and accuracy. Avoid personal opinions or irrelevant details.
+
+    New Learnings:
+    {learnings}"
+
+    headers = {
+        "Authorization": f"Bearer {CONSOLIDATION_API_KEY}",
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "model": "llama3-8b-8192", # Example model, can be changed
+        "messages": [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt}
+        ],
+        "temperature": 0.5
+    }
+
+    try:
+        response = requests.post(LLM_API_URL, headers=headers, json=payload, timeout=60)
+        response.raise_for_status() # Raise HTTPError for bad responses (4xx or 5xx)
+        
+        result = response.json()
+        if 'choices' in result and result['choices']:
+            return result['choices'][0]['message']['content']
+        else:
+            print(f"LLM API did not return expected choices: {result}")
+            return None
+    except requests.exceptions.RequestException as e:
+        print(f"Error calling LLM API: {e}")
+        return None
+    except json.JSONDecodeError:
+        print(f"Error decoding JSON response from LLM API. Response: {response.text}")
+        return None
+
+def update_core_memory(distilled_content):
+    if not distilled_content:
+        print("No distilled content to update memory with.")
+        return
+
+    try:
+        with open(MEMORY_FILE, 'w', encoding='utf-8') as f:
+            f.write(distilled_content)
+        print(f"Successfully updated core memory: {MEMORY_FILE}")
+    except Exception as e:
+        print(f"Error writing to core memory file {MEMORY_FILE}: {e}")
+
+if __name__ == "__main__":
+    if not CONSOLIDATION_API_KEY:
+        print("CONSOLIDATION_API_KEY not set. Cannot perform consolidation.")
+        exit(1)
+
+    print("Starting daily brain consolidation...")
+    current_learnings = get_learned_content()
+    
+    if current_learnings:
+        print(f"Found {len(current_learnings.splitlines())} lines of new learnings to process.")
+        distilled_output = distill_memory(current_learnings)
+        if distilled_output:
+            update_core_memory(distilled_output)
+            # Optional: Clean up learned directory after successful consolidation
+            # print("Cleaning up learned directory...")
+            # os.system(f"rm -rf {LEARNED_DIR}") # Use with caution
+            # os.makedirs(LEARNED_DIR) # Recreate if removed
+        else:
+            print("Failed to distill memory. Core memory not updated.")
+    else:
+        print("No new learnings found for today's consolidation.")
+
+    print("Brain consolidation process finished.")
+EOF
+          chmod +x $HOME/scripts/consolidate_brain.py
+          
+          # Execute the script
+          echo "Running Python script..."
+          python3 $HOME/scripts/consolidate_brain.py
+          if [ $? -ne 0 ]; then
+              echo "::error::Brain consolidation script failed."
+              exit 1
+          fi
+          echo "Brain consolidation script finished."

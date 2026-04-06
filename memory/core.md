@@ -25,6 +25,9 @@ Campaigns are referenced by ID (e.g., "campaign 1") in all documentation and age
 ## Capabilities
 - Display ad generation: Standalone HTML/JS canvas ad generator at /home/unclehowell/scottishbay/static/pcp/pages/index_fc.html — generates PNG display ads matching the PCP webapp rendering pipeline (bg colour, cover image, tint overlay, logo positioning, auto-fitting headline text, auto-shrinking small print with dark backdrop). See skills/display-ad-generator/SKILL.md.
 - Multi-channel marketing orchestration
+- 18-tier provider fallback system: ${BRAIN_ROOT}/providers.json
+- Brain sync automation: ${BRAIN_ROOT}/scripts/sync-brain.sh
+- GitHub workflow consolidation: ${BRAIN_ROOT}/.github/workflows/
 - Lead capture and nurturing workflows
 - Content generation and distribution
 - Analytics and performance optimization
