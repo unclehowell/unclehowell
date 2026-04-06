@@ -183,3 +183,71 @@ with self.voiceover(text='This is a <bookmark mark="circle"/>circle.') as tracke
 ```
 
 This is the recommended approach for any video with narration. The manual ffmpeg muxing workflow above is still useful for adding background music or post-production audio mixing.
+
+## Jellyfin Integration — Final Output
+
+**Always deliver the final video to the Jellyfin library so it appears in the user's video library automatically.**
+
+The Jellyfin video library lives at:
+```
+/var/lib/jellyfin/root/default/Videos/
+```
+
+### Delivery Protocol
+
+After stitching the final `.mp4`:
+
+```bash
+# 1. Copy final video to Jellyfin library
+cp final.mp4 /var/lib/jellyfin/root/default/Videos/
+
+# 2. Trigger a Jellyfin library scan via API
+# Get the API key from /var/lib/jellyfin/config/system.xml
+JELLYFIN_API_KEY=$(grep -oP '<ApiKey>\K[^<]+' /var/lib/jellyfin/config/system.xml)
+
+# Scan the Videos library
+curl -s -X POST "http://localhost:8096/Library/Refresh" \
+  -H "X-MediaBrowser-Token: $JELLYFIN_API_KEY"
+```
+
+### Naming Conventions for Jellyfin
+
+Jellyfin parses metadata from filenames. Use clear, descriptive names:
+
+```bash
+# Good — Jellyfin will parse correctly
+"Manim - Fourier Series Explained.mp4"
+"Manim - How Neural Networks Work.mp4"
+"Manim - Gradient Descent Visualization.mp4"
+
+# Bad — Jellyfin will show raw
+"final.mp4"
+"output_2024_01.mp4"
+```
+
+**Prefix with "Manim - "** so all AI-generated videos sort together in Jellyfin.
+
+### Automated Delivery Step
+
+Add this to the render pipeline after stitching:
+
+```bash
+# After ffmpeg stitch produces final.mp4:
+TITLE="Fourier Series Explained"
+OUTPUT="/var/lib/jellyfin/root/default/Videos/Manim - ${TITLE}.mp4"
+cp final.mp4 "$OUTPUT"
+chmod 644 "$OUTPUT"
+
+# Trigger library scan
+JELLYFIN_API_KEY=$(grep -oP '<ApiKey>\K[^<]+' /var/lib/jellyfin/config/system.xml)
+if [ -n "$JELLYFIN_API_KEY" ]; then
+  curl -s -X POST "http://localhost:8096/Library/Refresh" \
+    -H "X-MediaBrowser-Token: $JELLYFIN_API_KEY"
+  echo "Copied to Jellyfin and scan triggered: $OUTPUT"
+else
+  echo "WARNING: Could not read Jellyfin API key. Copied to: $OUTPUT"
+  echo "Jellyfin will auto-scan within 60 seconds (LibraryMonitorDelay)."
+fi
+```
+
+Jellyfin's `LibraryMonitorDelay` is set to 60 seconds, so even without the API trigger the video will appear within ~1-2 minutes.

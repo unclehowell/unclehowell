@@ -34,8 +34,9 @@ imessage:f545da0f5cc64dd9ee1ffd2b7733a11b
 jupyter-live-kernel:6bda9690d8c71095ac738bd9825e32f2
 linear:a0273574b97ca56dd74f2a398b0fc9c3
 llama-cpp:ea44fc1c259f0d570c8c9dfcaba5b3e5
+llm-wiki:83750ad1d0a3bbd1d495067296bac6bd
 lm-evaluation-harness:d9cd486dd94740c9e0400258759a8f54
-manim-video:3009d6b89f948871d50ebfb126ecddf8
+manim-video:09c1f0157a356554596a428a85aa196c
 mcporter:a1736a8c1837ea3a9b157b759af675d7
 minecraft-modpack-server:3cc682f8aef5f86d3580601ba28f9ba3
 modal:957d93b8e4bf44fb229a0466df169f36
@@ -48,6 +49,7 @@ ocr-and-documents:0fe461668b245d894370b8b40c3eb012
 opencode:e3583bfa72da47385f6466eaf226faef
 openhue:0487b4695a071cc62da64c79935bc8d1
 outlines:8efbd31f1252f6c8fb340db4d9dcce2f
+p5js:8cb0e558f2324c82f0973665bdababa3
 peft:72f5c4becba0b358cb7baf8a983f7ec5
 plan:86a38cbbed14813087a6c3edb5058cde
 pokemon-player:2a30ed51c1179b22967fb4a33e6e57e4
