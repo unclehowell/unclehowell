@@ -93,24 +93,67 @@ For each profile that has a unique bot:
 echo "TELEGRAM_BOT_TOKEN=bot:full_token_here" >> ~/.hermes/profiles/<profile>/.env
 ```
 
-### Step 5b: Verify config key names (CRITICAL)
-The gateway config parser uses specific key names. Common mismatches:
-- **`bot_token:` is WRONG** — must be `token:`
-- **Missing `allowed_users:`** — gateway silently rejects messages from unknown users
-- **`enabled: true`** must be present in the telegram section
+### Step 5b: Verify config key names AND structure (CRITICAL)
 
-Correct telegram section format:
+**Root cause of "No messaging platforms enabled" with correct-looking configs:**
+
+The `GatewayConfig.from_dict()` method in `gateway/config.py` ONLY reads from the `platforms:` section (line 344-350). A flat `telegram:` section at top level is IGNORED for `enabled` and `token`. The `load_gateway_config()` merge function only bridges `unauthorized_dm_behavior`, `reply_prefix`, `require_mention`, and `mention_patterns` — NOT `enabled` or `token`.
+
+**WRONG (gateway ignores this):**
 ```yaml
 telegram:
   enabled: true
-  token: "bot:123456:ABC..."   # NOT bot_token
-  allowed_users:
-    - 5837518218               # User chat_id
+  token: "8672462002:AAHxxx"
 ```
 
-The env var in .env must be named `TELEGRAM_BOT_TOKEN` (gateway reads this via config interpolation).
+**CORRECT:**
+```yaml
+platforms:
+  telegram:
+    enabled: true
+    token: "8672462002:AAHxxx"
+telegram:
+  enabled: true      # keep top-level for legacy compat
+  token: "8672462002:AAHxxx"
+```
 
-**Symptom of wrong key name:** Gateway says "No messaging platforms enabled" even though `enabled: true` is in the config. Fix: `sed -i 's/bot_token:/token:/g' ~/.hermes/profiles/*/config.yaml`
+**Automated fix for broken configs:**
+```bash
+for cfg in /home/ubuntu/hermes_cmd_agent*/config.yaml; do
+    python3 -c "
+import yaml
+with open('$cfg') as f:
+    c = yaml.safe_load(f)
+tg = c.get('telegram', {})
+if tg and tg.get('enabled'):
+    c.setdefault('platforms', {})
+    c['platforms']['telegram'] = {'enabled': True, 'token': tg.get('token', '')}
+with open('$cfg', 'w') as f:
+    yaml.dump(c, f, default_flow_style=False, sort_keys=False)
+"
+done
+```
+
+**Systemd service files must also set env vars** — even when config.yaml has tokens, the gateway adapters read from env vars during connection:
+```ini
+[Service]
+Environment=HERMES_HOME=/home/ubuntu/hermes_cmd_agent1
+Environment=TELEGRAM_BOT_TOKEN=8672462002:AAHxxx
+Environment=TELEGRAM_ALLOWED_USERS=5837518218
+```
+
+**Key naming rules:**
+- Config yaml: `token:` (NOT `bot_token:`)
+- Env var: `TELEGRAM_BOT_TOKEN`
+- Missing `TELEGRAM_ALLOWED_USERS` in service = all DMs rejected with "No user allowlists configured"
+
+**Diagnostic command:**
+```bash
+# Check if gateway actually loaded the platform config
+journalctl -u hermes-cmd-agent1.service -n 20 --no-pager
+# "No messaging platforms enabled" = config structure wrong
+# "No user allowlists configured" = TELEGRAM_ALLOWED_USERS not set in service
+```
 
 ### Step 5c: Verify pairing status
 If a bot responds with "I don't recognize you yet! Here's your pairing code:", the user hasn't been approved yet:
