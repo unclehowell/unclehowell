@@ -293,6 +293,36 @@ When receiving a new task:
 - ❌ Self-approving production changes (violates Defined Roles)
 
 ---
+---
+
+## Benefits Realization Management
+
+PRINCE2 requires tracking not just delivery success but **whether the project actually delivers value**.
+
+### Benefits Tracking Flow
+```
+Baseline → Measure → Compare → Act → Report
+```
+
+### Key Practices
+1. **Define benefits upfront** — tie each deliverable to measurable outcomes (ROI, user satisfaction, performance improvement)
+2. **Measure post-delivery** — don't assume benefits are realized just because deliverables shipped
+3. **Track leading indicators** — usage metrics, adoption rates, error rates as proxies for benefit realization
+4. **Close the loop** — feed actual benefits vs forecast back into the Business Case theme
+5. **Document in DEBRIEF** — final review includes benefits realization status, not just delivery status
+
+### AI Agent Integration
+- Tag deliverables with expected benefit metrics in product descriptions
+- Set up monitoring for post-deployment metrics
+- Generate benefits realization reports at stage boundaries
+- Include benefits status in highlight reports: `Benefits: 🟢 on track / 🟡 partial / 🔴 missed`
+
+### Example Benefits Register
+| Benefit | Metric | Baseline | Target | Actual | Status |
+|---------|--------|----------|--------|--------|--------|
+| Faster auth | Login time (p95) | 2.1s | <500ms | 480ms | 🟢 |
+| Reduced tickets | Support volume | 50/day | <20/day | 18/day | 🟢 |
+| Better UX | Task completion rate | 65% | >85% | 72% | 🟡 |
 
 ## Honcho Memory Integration
 
