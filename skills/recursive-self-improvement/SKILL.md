@@ -36,7 +36,7 @@ Each stage feeds the next:
 
 ---
 
-## Pattern 1: Multi-Path Feedback Loops (v2)
+## Pattern 1: Multi-Path Feedback Loops (v3 — 2026 Update)
 
 ### The TDD-Driven Loop
 Every task should follow this cycle:
@@ -48,18 +48,24 @@ Every task should follow this cycle:
 
 **Speed matters:** < 10s for unit-level loops, < 2m for integration loops.
 
-### Multi-Path Exploration (New — 2024-2025 research)
+### Modular Critic-Actor Separation (2024-2025 research)
+Modern agents use **separate modules** for execution parsing, error classification, and patch generation — NOT monolithic self-refine prompts. This reduces thrashing and improves diagnostic accuracy.
+
+### Multi-Path Exploration
 For complex problems, use **parallel candidate generation**:
-- Generate 3-5 candidate solutions
+- Generate 3-5 candidate solutions via delegate_task
 - Score via automated judges (linters, test suites, complexity metrics)
 - Merge strongest traits from each candidate
 - Avoid sequential single-path loops which plateau quickly
 
-### Adaptive Stopping Criteria (New)
+### Adaptive Stopping Criteria
 Hard iteration caps waste compute. Use confidence thresholds:
 - Stop when Δ(pass_rate) < 2% over 2 iterations
 - OR when resource/cost budget is exhausted
 - Cap recursion depth at 3-5 self-mod cycles per session
+
+### Memory Compaction (2024-2025 best practice)
+Instead of storing raw few-shot examples, use **memory compaction pipelines**: an LLM summarizes past trajectories into deterministic rules, replacing raw examples to save context window and improve retrieval precision.
 
 ---
 
