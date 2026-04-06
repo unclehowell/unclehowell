@@ -1,49 +1,50 @@
 #!/bin/bash
 # Brain Git-on-Change Sync Service
-# Uses inotifywait to detect file changes and trigger sync
+# Watches the brain directory and commits+pushes on any file change
 # Usage: bash /home/ubuntu/brain/scripts/watch-sync.sh
+# Runs as a background daemon - logs to /tmp/brain-watch-sync.log
 
 set -euo pipefail
 
 BRAIN_DIR="${BRAIN_DIR:-/home/ubuntu/brain}"
-SYNC_SCRIPT="${BRAIN_DIR}/scripts/sync.sh"
-LOCK_FILE="/tmp/brain_sync.lock"
-DEBOUNCE_SECONDS=30
+LOG_FILE="/tmp/brain-watch-sync.log"
+PENDING_FILE="/tmp/brain-watch-pending"
 
-# Kill stale lock if exists
-rm -f "$LOCK_FILE"
+cd "$BRAIN_DIR" || { echo "ERROR: Brain dir not found"; exit 1; }
 
-echo "[brain-watch] Started at $(date)"
-echo "[brain-watch] Watching: $BRAIN_DIR"
-echo "[brain-watch] Debounce: ${DEBOUNCE_SECONDS}s"
+echo "[watch-sync] Started at $(date) — watching $BRAIN_DIR" >> "$LOG_FILE"
 
-inotifywait -m -r -e modify,create,delete,move \
-    --exclude '(\.git/|\.swp$|\.swx$|\.swo$|__pycache__|node_modules|\.tmp$)' \
-    "$BRAIN_DIR" 2>/dev/null | while read path action file; do
+# Initialize pending flag
+touch "$PENDING_FILE"
 
-    # Skip .git internal changes
-    if [[ "$path" == *".git/"* ]]; then
+# Coalesce changes: if a change happens while sync is running, mark pending and re-sync
+while true; do
+    # Wait for any file change (create, modify, delete, move)
+    # -e specifies events, -r for recursive, -m for monitor (continuous)
+    inotifywait -r -q \
+        -e close_write -e create -e delete -e moved_to -e moved_from \
+        --exclude '.git/|\.swp$|\.tmp$|__pycache__|node_modules|\.log$' \
+        "$BRAIN_DIR" 2>/dev/null || true
+
+    # Sync
+    (
+        flock -n 200 || exit 0  # Skip if another sync is running
+        cd "$BRAIN_DIR"
+        git add -A
+        if git diff --cached --quiet && git diff --cached --staged --quiet 2>/dev/null; then
+            echo "[watch-sync] $(date): No changes" >> "$LOG_FILE"
+        else
+            COMMIT_MSG="Brain update: $(date '+%Y-%m-%d %H:%M')"
+            git commit -m "$COMMIT_MSG" >> "$LOG_FILE" 2>&1 || true
+            echo "[watch-sync] $(date): Committed" >> "$LOG_FILE"
+            git push origin main >> "$LOG_FILE" 2>&1 || echo "[watch-sync] $(date): Push failed" >> "$LOG_FILE"
+            echo "[watch-sync] $(date): Pushed" >> "$LOG_FILE"
+        fi
+    ) 200>/tmp/brain-sync.lock
+
+    # Check if pending — if another change came in during sync, re-sync
+    if [ -f "$PENDING_FILE" ]; then
+        touch "$PENDING_FILE"  # Reset for next iteration
         continue
     fi
-
-    CURRENT_TIME=$(date +%s)
-
-    # Debounce: skip if sync ran in last N seconds
-    if [ -f "$LOCK_FILE" ]; then
-        LAST_SYNC=$(cat "$LOCK_FILE" 2>/dev/null || echo 0)
-        ELAPSED=$((CURRENT_TIME - LAST_SYNC))
-        if [ "$ELAPSED" -lt "$DEBOUNCE_SECONDS" ]; then
-            continue
-        fi
-    fi
-
-    # Update lock
-    echo "$CURRENT_TIME" > "$LOCK_FILE"
-
-    echo "[$(date)] Change detected: $action $path$file — syncing..."
-
-    # Run sync
-    cd "$BRAIN_DIR" && bash "$SYNC_SCRIPT" 2>&1 | tail -5
-
-    echo "[$(date)] Sync complete."
 done
