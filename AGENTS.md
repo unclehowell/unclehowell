@@ -45,7 +45,7 @@ You are part of a unified hive mind. All agents share one collective intelligenc
 
 **Brain folder structure:**
 ```
-/home/unclehowell/brain/
+`~/brain/`
 ├── AGENTS.md              # Master instructions (entry point)
 ├── README.md              # Overview
 ├── PROTOCOL.md            # Navigation protocol
