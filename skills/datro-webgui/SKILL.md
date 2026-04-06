@@ -35,11 +35,13 @@ All visitors see a login wall before the UI appears. The gate is client-side onl
 
 **Passphrase:** `certacito`
 
-**Implementation** (in `/var/www/datro-ui/index.html`):
-- `#login-overlay` div covers the full viewport with password input
-- `#ui-wrapper` div wraps all UI content, hidden by default
-- On correct passphrase: `sessionStorage.setItem("auth", "1")` and reveal UI
-- CSS: `#ui-wrapper { display: none; }` and `#body:not(.authenticated) header, main, nav { display: none; }`
+**Implementation** (in `/home/ubuntu/datro/static/ui/index.html`):
+- `#login-overlay` div covers the full viewport with password input and "Reply by logging in" subtitle text
+- Login gate is a standalone overlay — the native UI (header, main, nav) is NOT wrapped in a container
+- On correct passphrase: `sessionStorage.setItem("auth", "1")`, overlay is hidden with inline `style.display = "none"`, and `document.body.classList.add("authenticated")` fires
+- **Mic auto-connect:** After successful login, a `setTimeout` (1.5s) sends `postMessage({type: "request-mic"})` to the avatar iframe. The Enter key press from authentication counts as user gesture, so browser grants mic permission.
+
+**PITFALL — CSS Specificity:** Do NOT use `#body:not(.authenticated)` selectors to hide body children. The `#body` ID selector has higher specificity than `.authenticated` class, and `!important` won't reliably override it. Use a full-viewport overlay with higher z-index instead, hide it with direct JS `style.display = "none"` on success.
 
 **To change passphrase:** Find the `var PASS = "certacito"` line in the login gate script block.
 
