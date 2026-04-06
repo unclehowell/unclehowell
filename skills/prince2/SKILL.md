@@ -291,3 +291,26 @@ When receiving a new task:
 - ❌ Skipping quality gates to "move fast" (violates Quality Management)
 - ❌ Not documenting how things went (violates Learn from Experience)
 - ❌ Self-approving production changes (violates Defined Roles)
+
+---
+
+## Honcho Memory Integration
+
+Honcho (honcho.app) provides persistent memory scoped by `app_id`, `user_id`, and `session_id`.
+When running in multi-context environments (multiple projects, profiles, sessions):
+
+### Scoping Rules
+- Use `app_id` per project — isolates memories to prevent cross-project leakage
+- Tag memories with metadata: `{project: "x", context: "planning", status: "active"}`
+- Query with semantic search + metadata filter for precise retrieval
+
+### Memory Lifecycle
+1. **At project start**: Save mandate, PBS, tolerances as `context:persistent` memories
+2. **During execution**: Log exceptions, quality register updates, progress snapshots
+3. **At stage boundary**: Archive stage report, update running memory with new baseline
+4. **At close**: Final debrief → tagged memory with `status:archived` for future retrieval
+
+### Conflict Prevention
+- Honcho is append-first — use `memory_id` for explicit updates, never blind overwrites
+- Deduplicate: semantic similarity > 0.85 triggers merge/skip
+- Tag cross-session memories with `context:global` for persistence beyond session lifetime
