@@ -1,8 +1,8 @@
 ---
 name: recursive-self-improvement
 description: Patterns for compounding self-improvement in AI coding agents. Covers multi-path exploration loops, three-tier memory with decay, programmatic prompt optimization, skill promotion pipeline, and safe self-modification through sandboxed validation cycles.
-version: 2.0.0
-author: Hermes Agent (enhanced with 2024-2026 research)
+version: 2.1.0
+author: Hermes Agent (enhanced with 2024-2026 research, Honcho memory integration, Honcho multi-context patterns)
 metadata:
   hermes:
     tags: [self-improvement, meta-cognition, optimization, learning, feedback-loops]
