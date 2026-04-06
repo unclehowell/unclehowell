@@ -149,7 +149,7 @@ Only use these if working - check quotas/billing first:
 6. **Nvidia Kimi** - (when available)
 7. **LOCAL OLLAMA** - `qwen2.5:1.5b` - ONLY as LAST RESORT when all above fail
 
-API keys are stored in `/home/unclehowell/.hermes/.env` - NEVER copy them here!
+API keys are stored in `~/.hermes/.env` - NEVER copy them here!
 
 ## CPU LIMITS
 
