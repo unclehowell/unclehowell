@@ -27,7 +27,7 @@ On this machine, the home directory is `/home/ubuntu`, not `/home/unclehowell`.
 - accessible to ALL agents (hermes, claude, opencode, etc.)
 
 ### Tier 3: Skills  
-- /home/unclehowell/brain/skills/ — procedural memory (how-to guides)
+- ~/brain/skills/ — procedural memory (how-to guides)
 - loaded via skill_view(name)
 - created via skill_manage(action="create") when workflows repeat
 
