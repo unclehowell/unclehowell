@@ -11,8 +11,9 @@ category: web
 
 ## Architecture
 
-**Entry point:** `/var/www/datro-ui/index.html`
-**Static files:** `/var/www/datro-ui/` (served by nginx at `/` on port 80/443)
+**Entry point:** `/home/ubuntu/datro/static/ui/index.html`
+**Static files:** `/home/ubuntu/datro/static/ui/` (served by nginx at `/` on port 80/443)
+**Original datro UI:** `/home/ubuntu/datro/static/` (canonical path, NOT `/var/www/datro-ui/`)
 **Avatar app:** `/var/www/avatar-system/public/index.html` (served by nginx at `/avatar/`)
 
 ### Request flow
