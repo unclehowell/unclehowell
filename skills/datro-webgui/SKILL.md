@@ -153,6 +153,35 @@ const APPS = [
 ```
 Uses `js/app-toggle.js` to sync checkbox to localStorage.
 
+## Branding & Version Convention
+
+**Site name:** `Finance Cheque UK` (changed from legacy `Hotspotβnβ`).
+**Version/placeholder:** Short git commit hash (e.g. `ef6c93f0c`), shown as the `<input>` placeholder.
+
+To rename branding, update BOTH locations in `index.html`:
+1. `<title>` tag: `<title>Finance Cheque UK</title>`
+2. Input element: `value="Finance Cheque UK"`, `name="Finance Cheque UK"`, `placeholder="<commit-hash>"`, `id="site-branding"`
+
+To get the commit hash: `cd /home/ubuntu/datro && git log -1 --format='%h'`
+
+## Social Icons
+
+**Location:** Inline `<style>` block in `index.html` — `.social-icons-header` class.
+**Current icons:** Telegram (`https://t.me/Librarianclerkbot`) + WhatsApp (`https://wa.me/44773262`).
+**Alignment:** Must always be right-aligned. CSS pattern:
+```css
+.social-icons-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 0px;
+    margin-left: auto;
+}
+```
+`margin-left: auto` is what pushes the icon group to the far right of the flex header.
+
+**WhatsApp number:** +44773262 (partial — full number known to user). Update the `wa.me/` href if it changes.
+
 ## Pitfalls
 - **Avatar iframe mic permissions:** Must include `allow="microphone"` and `sandbox="allow-scripts allow-same-origin ..."`. If mic fails, the parent page can proxy via `postMessage({ type: 'request-mic' })`.
 - **Avatar in split view:** Must be compact — use `min(90px, 28vw)` for sizing, percentage-based positioning, and no scrollbar. The top half is only 50% viewport height.
