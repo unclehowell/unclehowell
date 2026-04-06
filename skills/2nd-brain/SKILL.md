@@ -62,7 +62,7 @@ skill_view name=skill-name
 memory action="add" target="memory" content="the fact"
 
 # Archive to brain (cross-agent sharing)
-Write to /home/unclehowell/brain/memory/archive/learned/YYYY-MM-DD/
+Write to ~/brain/memory/archive/learned/YYYY-MM-DD/
 
 # Close the loop
 bash /home/unclehowell/brain/scripts/sync.sh
