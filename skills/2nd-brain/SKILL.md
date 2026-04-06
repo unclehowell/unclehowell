@@ -42,11 +42,11 @@ AT SESSION START:
 DURING WORK:
 5. Save durable facts immediately with memory(action="add")
 6. Save user corrections with memory(action="add", target="user")
-7. Discover recurring pattern? Create a skill in /home/unclehowell/brain/skills/
+7. Discover recurring pattern? Create a skill in ${BRAIN_ROOT}/skills/
 
 AFTER TASK COMPLETION:
-8. Write a brief summary to /home/unclehowell/brain/memory/archive/learned/YYYY-MM-DD/agent-name.md
-9. Run: bash /home/unclehowell/brain/scripts/sync.sh
+8. Write a brief summary to ${BRAIN_ROOT}/memory/archive/learned/YYYY-MM-DD/agent-name.md
+9. Run: bash ~/brain/scripts/sync.sh
 10. Sync must complete before session ends
 
 ## Quick Reference
