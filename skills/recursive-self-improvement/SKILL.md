@@ -249,3 +249,26 @@ Track orthogonal metrics — don't game one metric at the expense of others
 ```
 
 **The agent that learns from every task is orders of magnitude more effective than one that doesn't.**
+
+---
+
+## Honcho Multi-Context Memory Integration
+
+When operating across multiple profiles, projects, and sessions, use Honcho for structured persistent memory:
+
+### Agent-as-Curator Pattern
+Honcho is a storage/retrieval substrate — the **agent** must implement filtering, tagging, and lifecycle logic.
+
+### Multi-Context Strategies
+- **Per-project**: Use distinct `app_id` per project + `project:name` metadata tag. Enforce project-scoped queries to prevent cross-project contamination.
+- **Per-user**: Anchor to `user_id` with namespace in metadata (`preferences`, `communication_style`).
+- **Cross-session continuity**: Create a `context:global` session per user. Copy high-value session memories into it. Prune stale entries via TTL.
+- **Memory curation**: At conversation end, summarize → deduplicate → tag → upsert. Never raw-log.
+
+### Retrieval Tiers
+1. **High**: Metadata match + semantic similarity — inject into system prompt
+2. **Medium**: Semantic only — inject into tool context
+3. **Low**: Fallback — fetch on-demand when needed
+
+### Deduplication
+Run semantic similarity check before saving new memory. If `similarity > 0.85`, merge or skip. Honcho does **not** auto-merge conflicts — explicit `memory_id` update required.
