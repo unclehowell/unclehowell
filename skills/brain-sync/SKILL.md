@@ -60,21 +60,57 @@ Brain folders on different machines (laptop vs server) are independent via git. 
 
 The watch-sync.sh coalesces rapid changes and uses `flock` for race condition safety.
 
+## Architecture: Star Network Sync
+
+All devices sync via `github.com/unclehowell/unclehowell.git` as the central hub:
+```
+   GitHub (central hub)
+    ↑    ↑    ↑
+    |    |    |
+  AWS2  Laptop  Phone (future)
+  (✅)     (⚠️)    (❓)
+```
+
+Each device has its own `~/brain/` clone that auto-pushes on change and auto-pulls when remote advances.
+
+## Concurrent Edit Resolution
+
+When two devices edit the same file simultaneously, the **second pusher's Git push is rejected**.
+The watcher handles this automatically with the built-in retry loop:
+```
+for i in 1 2; do
+    if git push origin main; then break; fi
+    git pull --rebase --autostash origin main
+done
+```
+This is identical to what software teams do: fetch → rebase → push. Git's distributed merge engine handles conflict resolution natively.
+
+## Deploying Watcher to New Machines
+
+### Via Tailscale SSH (for Linux machines):
+```bash
+ssh $MACHINE_IP "
+  cd ~/brain &&
+  git pull --rebase origin main &&
+  git config pull.rebase true &&
+  git config rebase.autoStash true &&
+  nohup bash ~/brain/scripts/watch-sync.sh > /tmp/brain-watch-sync.log 2>&1 &
+"
+```
+
+### Via ADB (for Termux on Android):
+Termux requires special setup — ADB shell runs as 'shell' user, not Termux. Use:
+```bash
+# Open Termux and run inside the app:
+pkg install git openssh
+gh auth login --git-protocol https
+mkdir -p ~/brain && cd ~/brain
+git clone https://github.com/unclehowell/unclehowell.git .
+termux-setup-storage
+# Then set up watch-sync.sh (requires inotify-tools: pkg install inotify-tools)
+```
+
 ## What to Archive
-
-Always archive:
-- Decisions made and why
-- Errors encountered and how they were resolved
-- New skills created
-- Updated skills
-- User corrections/preferences (also save via memory tool)
-- Environment discoveries (tool paths, API quirks, etc.)
-
-Never archive:
-- API keys, passwords, or other secrets
-- Temporary/ephemeral state
-
-## Path Resolution
 
 All scripts use `${BRAIN_DIR:-$(eval echo ~$(whoami))/brain}` to resolve the correct brain path:
 - Server: `/home/ubuntu/brain`
