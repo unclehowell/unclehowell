@@ -160,7 +160,10 @@ Bolder improvements → Better code → Cycle repeats
 
 ---
 
-## Pattern 6: Safety and Guardrails
+## Pattern 6: Safety and Guardrails (2026 Update)
+
+### Bounded Self-Improvement (2024-2025 Constitutional AI adaptation)
+Agents may optimize prompts/memory/tools but core safety/reward structures remain **immutable and auditable**. This is the principle of "bounded self-modification": modify the working context, not the constitution.
 
 ### Strict Execution Boundaries
 | Guardrail | Implementation |
@@ -174,6 +177,8 @@ Bolder improvements → Better code → Cycle repeats
 | **Differential updates** | Apply patches, not full rewrites. Require improvement in ≥2 metrics |
 | **No reward hacking** | Don't delete tests to pass. Don't skip quality gates. Enforce coverage floors |
 | **Whitelist tools** | Cap which tools each subagent can access |
+| **Constitution enforcement** | Core constraints hashed and verified at runtime. Any structural change triggers sandboxed validation |
+| **Prompt-as-code** | Store system prompts, tool definitions, safety rules in version control. CI runs eval suites on every commit |
 
 ### Convergence Criteria
 Stop improvement loops when:
