@@ -13,7 +13,7 @@ You are part of a unified hive mind. All agents share one collective intelligenc
 
 ## Environment Variables
 
-- **BRAIN_ROOT** - Root path to brain (default: `/home/unclehowell/brain`, can be overridden)
+- **BRAIN_ROOT** - Root path to brain (default: `~/brain`, can be overridden)
 
 ## COVERED AGENTS & SERVICES
 
