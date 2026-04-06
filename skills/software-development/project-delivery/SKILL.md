@@ -16,53 +16,65 @@ metadata:
 Merges PRINCE2 governance with AI agent execution patterns into a single delivery framework. 
 Follow this for all multi-step tasks (>3 tool calls).
 
-## The Delivery Pipeline
+## The Delivery Pipeline (PRINCE2 7th Edition + AI Agent Workflow)
 
 ```
 MANDATE → BRIEF → PLAN → EXECUTE → CHECKPOINT → DEBRIEF
-                ↑          ↓
-         (Quality Gates)  (Self-Improve)
+                ↑          ↓                    ↓
+         (Quality Gates)  (Self-Improve)    (Benefits Review)
 ```
 
-### Phase 1: MANDATE (Requirements Capture)
-- What exactly are we building? (product, not activities)
+### Phase 1: MANDATE (Starting Up — SU)
+- What exactly are we building? (product, not activities — Focus on Products principle)
 - Success criteria: measurable, testable
 - Constraints: time, budget, technical
-- Stakeholders: who decides, who reviews
+- Stakeholders: who decides, who reviews (Defined Roles & Responsibilities)
+- Validate business justification (Continued Business Justification principle)
+- Draft initial Product Breakdown Structure (PBS)
 
-### Phase 2: BRIEF (Solution Design — **Present BEFORE coding**)
-- Product Breakdown Structure (PBS): System → Module → Component → Tests + Docs
+### Phase 2: BRIEF (Initiating — IP) — **Present BEFORE coding**
+- Product Breakdown Structure: System → Module → Component → Tests + Docs
 - Work packages with clear deliverables
-- Risk assessment with mitigations
-- Quality criteria per deliverable
+- Risk assessment with mitigations (Risk theme)
+- Quality criteria per deliverable (Quality theme)
 - Estimated timeline with tolerance margins (±5% time, ±10% cost)
-- **Get explicit approval before proceeding**
+- Define tolerances for quality, scope (MoSCoW), risk exposure
+- **Get explicit approval before proceeding** (Directing process)
 
-### Phase 3: PLAN (Hierarchical Task Graph)
+### Phase 3: PLAN (Stage Planning)
 - Decompose work packages into tasks with dependencies
-- Assign to agent or subagent
-- Set quality gates: lint, type-check, test coverage, security scan
+- Assign to agent or subagent (subagent-driven-development skill)
+- Set quality gates: lint, type-check, test coverage ≥80%, security scan
 - Define tolerance thresholds per stage
+- Generate hierarchical task graph with milestones
 
-### Phase 4: EXECUTE (Iterative Delivery)
+### Phase 4: EXECUTE (Controlling Stage + Managing Delivery — CS/MP)
 - Bite-sized increments per work package
-- Mini cycle: implement → test → review → commit
+- Mini cycle: implement → test → review → commit (TDD cycle)
 - Quality gates at stage boundaries
-- Real-time status tracking: 🟢 on track / 🟡 risk / 🔴 blocked
+- Real-time status tracking: 🟢 on track / 🟡 approaching tolerance / 🔴 breached
+- Monitor tolerances continuously (Manage by Exception principle)
+- Multi-path exploration for complex problems: 3-5 candidates, score, merge best
+- Log work packages, track progress, update quality register
 
-### Phase 5: CHECKPOINT (Stage Gate)
+### Phase 5: CHECKPOINT (Stage Boundary — SB)
 - Validate all deliverables against product descriptions
-- Run automated gate checks
-- Update progress metrics
+- Run automated gate checks (test coverage ≥80%, zero P0/P1 defects, clean lint)
+- Update progress metrics and business case
+- Update risk register with current exposure
 - Generate highlight report:
   - What's done / planned next / risks / tolerance status
+  - Benefits status: 🟢 on track / 🟡 partial / 🔴 missed
 
-### Phase 6: DEBRIEF (Close & Learn)
-- Final status: planned vs actual
+### Phase 6: DEBRIEF (Closing — CP) + Benefits Realization
+- Final status: planned vs actual across all dimensions
+- Validate all quality register entries complete
+- Benefits realization review: compare baseline vs actual KPIs
 - What went well / what could be improved
 - Archive learnings to brain and session memory
-- Update skills with new patterns
-- Capture lessons for recursive self-improvement
+- Update skills with new patterns (recursive-self-improvement skill)
+- Generate post-project review document
+- Schedule post-deployment benefits tracking (if applicable)
 
 ## Quality Gates (Mandatory)
 
