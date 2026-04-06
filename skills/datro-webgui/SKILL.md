@@ -164,19 +164,38 @@ To rename branding, update BOTH locations in `index.html`:
 
 To get the commit hash: `cd /home/ubuntu/datro && git log -1 --format='%h'`
 
-## Social Icons
+## PITFALL — Rebuilding index.html: Keep Original Structure
 
-**Location:** Inline `<style>` block in `index.html` — `.social-icons-header` class.
-**Current icons:** Telegram (`https://t.me/Librarianclerkbot`) + WhatsApp (`https://wa.me/44773262`).
-**Alignment:** Must always be right-aligned. CSS pattern:
-```css
-.social-icons-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-right: 0px;
-    margin-left: auto;
-}
+When modifying `/home/ubuntu/datro/static/ui/index.html`, **do NOT rewrite from scratch.** The original gui.datro.xyz layout depends on a precise HTML structure with specific CSS classes (`cd-header`, `cd-3d-nav-trigger`, `cd-3d-nav-container`, `cd-selected`, `cd-marker`) and jQuery-driven JS (`main.js`). Rewriting the page breaks:
+
+- The 3D nav slide animation (header, fullscreen bar, and nav all move together via `.nav-is-visible`)
+- The color marker that slides under the active nav item
+- The transition animations defined in `dashboard/css/style.css`
+
+**Correct approach:** Make surgical patches to the original structure. Keep the same `<header>`, `<main>`, `<nav>` elements, same class names, same script includes. Only change content (text, links, iframe src).
+
+## PITFALL — ai.financecheque.uk CSP Blocks Iframes from command.financecheque.uk
+
+`ai.financecheque.uk` sends: `Content-Security-Policy: frame-ancestors 'self' https://financecheque.uk https://www.financecheque.uk`
+
+This means it only allows itself and financecheque.uk to embed it. Since the UI is on `command.financecheque.uk`, the iframe gets blocked. **To fix:** Add `https://command.financecheque.uk` to the CSP on the ai.financecheque.uk server.
+
+## PITFALL — Paperclip Database Uses finance_events for Currency, Not Companies
+
+Paperclip's billing currency lives in the `finance_events.currency` column (default 'USD'). The `companies` table may not have a currency column. Always check `information_schema` first. Currency update script in `~/paperclip-fix/update_currency.js`.
+
+## Paperclip API Endpoint Patterns
+
+Paperclip does NOT use `/api/companies/me` or `/api/agents`. Correct patterns:
+- Company: `GET /companies/{company_id}` → `http://127.0.0.1:3100/companies/43406ede-016c-4d24-ac10-8ceaa113804e`
+- Agents: `GET /companies/{id}/agents` → empty if no agents hired
+- Org: `GET /companies/{id}/org`
+- Issues: `GET /companies/{id}/issues`
+- Dashboard: `GET /companies/{id}/dashboard`
+
+## Social Icons (Updated)
+
+**Social icons moved into the header** (inside `<header class="cd-header">`), placed between the nav-trigger and the fullscreen bar, alongside the branding form. Use the existing header flex structure.
 ```
 `margin-left: auto` is what pushes the icon group to the far right of the flex header.
 
