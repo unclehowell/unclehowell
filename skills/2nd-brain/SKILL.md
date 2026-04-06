@@ -65,7 +65,7 @@ memory action="add" target="memory" content="the fact"
 Write to ~/brain/memory/archive/learned/YYYY-MM-DD/
 
 # Close the loop
-bash /home/unclehowell/brain/scripts/sync.sh
+bash ~/brain/scripts/sync.sh
 
 ## Wiring (do this once)
 
