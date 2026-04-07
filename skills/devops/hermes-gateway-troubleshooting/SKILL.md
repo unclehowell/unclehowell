@@ -45,7 +45,36 @@ Format: `{scope}-{sha256_hash_first_16_chars}.lock`
 
 Scopes: `telegram-bot-token`, `whatsapp-session`
 
-### Resolution Steps
+### Systematic Resolution
+
+**Step 1: Check for systemd service file token overrides**
+
+This is the #1 missed cause. The systemd service may be injecting the token at the OS level:
+
+```bash
+grep TELEGRAM_BOT_TOKEN /etc/systemd/system/hermes-gateway.service
+```
+
+If found, it overrides everything. Remove it:
+
+```bash
+sudo sed -i '/TELEGRAM_BOT_TOKEN=/d' /etc/systemd/system/hermes-gateway.service
+sudo systemctl daemon-reload
+sudo systemctl restart hermes-gateway
+```
+
+**Step 2: Check for env var overrides**
+
+Check if TELEGRAM_BOT_TOKEN leaked into environment:
+
+```bash
+env | grep TELEGRAM_BOT_TOKEN
+grep TELEGRAM_BOT_TOKEN ~/.hermes/gateway.env ~/.hermes/.env
+```
+
+Remove from any file where the agent shouldn't have Telegram.
+
+**Step 3: Verify config.yaml**
 
 **Step 1: Identify all running gateways**
 
