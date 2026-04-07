@@ -181,7 +181,64 @@ When modifying `/home/ubuntu/datro/static/ui/index.html`, **do NOT rewrite from 
 
 `ai.financecheque.uk` sends: `Content-Security-Policy: frame-ancestors 'self' https://financecheque.uk https://www.financecheque.uk`
 
-This means it only allows itself and financecheque.uk to embed it. Since the UI is on `command.financecheque.uk`, the iframe gets blocked. **To fix:** Add `https://command.financecheque.uk` to the CSP on the ai.financecheque.uk server.
+This means it only allows itself and financecheque.uk to embed it. Since the UI is on `command.financecheque.uk`, direct embedding is blocked.
+
+**Working workaround — reverse proxy path that strips CSP:**
+
+Add an nginx location that proxies ai.financecheque.uk while stripping CSP and cross-origin headers:
+
+```nginx
+location /chat/ {
+    auth_request /auth/check;
+    error_page 401 = /auth/login-page?redirect=$request_uri;
+    proxy_pass https://ai.financecheque.uk/;
+    proxy_hide_header Content-Security-Policy;
+    proxy_hide_header X-Frame-Options;
+    proxy_hide_header Cross-Origin-Opener-Policy;
+    proxy_hide_header Cross-Origin-Embedder-Policy;
+    proxy_hide_header Cross-Origin-Resource-Policy;
+    proxy_set_header Host ai.financecheque.uk;
+    proxy_ssl_server_name on;
+    proxy_ssl_name ai.financecheque.uk;
+}
+```
+
+Then use `/chat/` as the iframe `src` instead of `https://ai.financecheque.uk`. The browser sees it as same-origin, and all blocking headers are stripped server-side.
+
+**Note:** ai.financecheque.uk is actually Apache Guacamole (remote desktop gateway), not a chat app. It redirects `/` to `/guacamole/`. The proxy handles this redirect automatically.
+
+## PITFALL — Jellyfin Proxy Double-Pathing
+
+The nginx `/jellyfin/` location uses `proxy_pass`, and the trailing slash on proxy_pass strips the first path segment. If you write:
+
+```nginx
+location /jellyfin/ {
+    proxy_pass http://127.0.0.1:8096/jellyfin/;  # WRONG - double /jellyfin/
+}
+```
+
+A request to `/jellyfin/web/` becomes `http://127.0.0.1:8096/jellyfin/web/` but Jellyfin serves at `/web/` (no base path). **Fix:**
+
+```nginx
+location /jellyfin/ {
+    proxy_pass http://127.0.0.1:8096/;  # Correct - strips /jellyfin/ prefix
+    # ...
+}
+```
+
+Also add websocket upgrades:
+```nginx
+proxy_http_version 1.1;
+proxy_set_header Upgrade $http_upgrade;
+proxy_set_header Connection "upgrade";
+```
+
+## PITFALL — Cloudflare Blocks Headless Scraping on car.financecheque.uk
+
+car.financecheque.uk has Cloudflare JS challenge enabled. Neither `curl`, Playwright headless Chromium, nor Puppeteer can bypass it. The challenge requires real browser fingerprinting. If you need to scrape this site, either:
+1. Temporarily set Cloudflare to "Essentially Off" (or pause it) for 30 seconds
+2. Use a cloud browser automation service (Browserbase, ScrapeOps)
+3. Ask the user for the content directly
 
 ## Paperclip Billing Currency Change (USD → GBP)
 
