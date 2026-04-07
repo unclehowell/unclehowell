@@ -1,8 +1,8 @@
 ---
 name: recursive-self-improvement
 description: Patterns for compounding self-improvement in AI coding agents. Covers multi-path exploration loops, skill lifecycle with prune phase, memory consolidation cycles, DSPy-style prompt compilation, meta-evaluation, self-play training, constitutional constraints, and Agentic Computer Interfaces (ACI).
-version: 3.0.0
-author: Hermes Agent (enhanced with 2024-2026 research, Honcho memory integration, SWE-agent ACI patterns, DSPy compilation, meta-evaluation, constitutional AI, critical gap analysis)
+version: 3.1.0
+author: Hermes Agent (enhanced with Reflexion, STaR/ReST patterns, tri-level memory, adversarial verification, constitutional constraints, ACI, 2026 research synthesis)
 metadata:
   hermes:
     tags: [self-improvement, meta-cognition, optimization, learning, feedback-loops]
