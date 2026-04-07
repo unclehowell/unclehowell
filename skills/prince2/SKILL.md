@@ -1,8 +1,8 @@
 ---
 name: prince2
 description: PRINCE2 methodology — mandatory framework for all software projects and delegated tasks. Covers 7 principles, 7 themes, 7 processes mapped to AI agent workflows with stage-gate delivery, product-based planning, exception management, quality gates, tolerance thresholds, CI/CD integration, and benefits realization tracking.
-version: 3.3.0
-author: Hermes Agent (enhanced with 2024-2026 research, Honcho-integrated memory, industry best practices, benefits realization tracking, and AI-native automation patterns)
+version: 3.4.0
+author: Hermes Agent (enhanced with PRINCE2 7th Edition 2023 updates, People theme, sustainability mandate, Agile/digital mapping, Honcho-integrated memory, industry best practices, benefits realization tracking, and AI-native automation patterns)
 metadata:
   hermes:
     tags: [project-management, governance, planning, quality, risk, delivery]
