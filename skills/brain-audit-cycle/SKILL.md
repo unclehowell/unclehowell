@@ -1,7 +1,7 @@
 ---
 name: brain-audit-cycle
 description: Systematic brain housekeeping and self-improvement audit — memory review, skill freshness audit across dual-layer structure (umbrella + sub-skills), research-to-skill integration, hardcoded path detection, service health verification, brain archival and sync. Use for cron housekeeping tasks or periodic maintenance.
-version: 1.0.0
+version: 1.1.0
 author: Hermes Agent
 metadata:
   hermes:
