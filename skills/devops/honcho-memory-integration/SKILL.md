@@ -91,23 +91,50 @@ Create → Tag → Retrieve → Use → Update/Supersede → Archive
 
 ## Memory Consolidation Cycles
 
-Like human sleep, agents need periodic offline memory consolidation:
+Like human sleep, agents need periodic offline memory consolidation.
 
 ### During Active Sessions
 - Write episodic memories: raw task traces, specific learnings, session facts
 - Tag with `session_id`, `timestamp`, `context` for temporal tracking
+- NEVER raw-log — always curate: summarize → deduplicate → tag → upsert
 
 ### During Consolidation (off-peak, via cron)
 1. **Compress** episodic → semantic: extract general principles from specific instances
 2. **Generalize** across domains: transfer learning between projects (cross-domain pattern detection)
+   - Error handling patterns from Python → JavaScript → shell scripting
+   - Testing strategies from backend → frontend → infrastructure
+   - Architecture patterns from one domain → structurally similar domains
 3. **Deduplicate**: find semantically similar memories (similarity > 0.85), merge or supersede
 4. **Resolve contradictions**: identify conflicting facts, flag for resolution
 5. **Enforce budgets**: cap memory count per retrieval tier (High: ≤50, Medium: ≤200, Low: ≤500)
+6. **Cross-domain transfer**: Abstract patterns to their core structure before applying to new domains
 
 ### Utility Score Decay
 ```
 score = usage_frequency × success_rate × recency_factor
 ```
 - Purge memories with score < 0.2 during consolidation
-- Re-score all memories monthly
+- Re-score all memories monthly (not per session — saves compute)
 - Track decay trends to identify degrading knowledge areas
+- NEVER delete — always mark `status: superseded` with `superseded_by` link
+
+## 2026 Research Updates
+
+### Agent-as-Curator Pattern
+Honcho is a storage/retrieval substrate. The **agent** must implement:
+- Filtering before writes (don't save raw tool outputs, save derived insights)
+- Intelligent tagging (always include at minimum: `context` + `status`)
+- Lifecycle management (episodic → semantic consolidation happens via cron, not in-session)
+- Conflict prevention (Honcho does NOT auto-merge — explicit `memory_id` update required)
+
+### Multi-Context Strategy Refinement
+For environments with multiple agents, profiles, and sessions:
+1. **Per-project scoping**: Distinct `app_id` + `project:name` metadata tag. Enforce project-scoped queries.
+2. **Cross-session continuity**: Maintain `context:global` session per user. Periodically copy high-value session memories.
+3. **Agent-to-agent sharing**: Honcho shares across all agents in same workspace. Memory flows directionally based on `observationMode: directional`.
+4. **Memory count monitoring**: Regularly check fact count per user/AI peer to detect accumulation issues.
+
+### Consolidation Frequency
+- **Active sessions**: Write episodic (high frequency, low consolidation)
+- **Per-day off-peak**: Compress to semantic, deduplicate, decay scoring
+- **Monthly**: Full audit — prune, re-score, cross-domain generalization
