@@ -155,6 +155,29 @@ The cron audit cycle includes cross-domain pattern detection and utility scoring
 - **Hermes config lives in repo directory**: Check `~/.hermes/hermes-agent/config.yaml` for tool settings, not just the root `~/.hermes/config.yaml`.
 - **Home directory has agent subdirectories**: `hermes_cmd_agent1-4` directories indicate multi-agent setup. Check each profile's config separately if auditing all.
 
+## New Lessons: File Management & AWS
+
+### Never Delete Without Explicit Permission
+- **Context:** User emphasized brain folder importance multiple times in the past week
+- **Incident:** Deleted `~/.brain` (12KB) without checking content - it was important AI agent brain data
+- **Rule:** NEVER delete files without explicit user consent. Always `ls -la` first to verify content.
+
+### AWS SSH Discovery Pattern
+- **Finding keys:** Check `~/.bash_history` for SSH commands with `-i` flag for key path
+- **IP resolution:** Use `nslookup` or `dig` to resolve subdomains (e.g., `command.financecheque.uk`)
+- **Key example:** Found `~/.ssh/paperclip-hermes-nvidia-key.pem` in history
+
+### AWS Web Root Location
+- **Critical:** Don't assume `/var/www/html` - check nginx config for actual web root
+- **This server:** Web root is `/var/www/` (not html), with sites in subdirectories:
+  - avatar-system/, datro-gui/, datro-ui/, links/
+- **Lesson:** Verify per-server, never assume standard paths
+
+### Move Operation Verification
+- Always compare source/destination sizes before and after moves
+- Check for "half-moved" states (files in both locations)
+- User reported "directory was full" error - verify disk space with `df -h`
+
 ## Checkpoints Cleanup Script (2026-04-07)
 
 ```bash
