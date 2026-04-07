@@ -233,6 +233,96 @@ proxy_set_header Upgrade $http_upgrade;
 proxy_set_header Connection "upgrade";
 ```
 
+## Canvas (PCP) App Deployment
+
+The ad generator / canvas app lives in the `scottishbay/datro` repo under `static/pcp/`. This is the FULL webapp with AdminLTE, drawer toggle, default images, and auto-loading displays.
+
+**Why use this over a standalone HTML page:**
+- Drawer toggles open/closed properly
+- Default background image and logo included
+- Displays auto-generate on page load
+- Full sidebar with all controls (colours, headlines, sizes, tint, small print)
+- Progress bar, status indicators, export-all buttons
+
+**Deployment steps:**
+
+1. Clone or update the repo to `/tmp/datro2`:
+```bash
+cd /tmp && rm -rf datro2 && git clone https://github.com/scottishbay/datro.git datro2
+```
+
+2. Copy the full pcp directory to `/canvas/`:
+```bash
+sudo rm -rf /var/www/datro-ui/canvas
+cp -r /tmp/datro2/static/pcp /var/www/datro-ui/canvas
+sudo chown -R ubuntu:www-data /var/www/datro-ui/canvas
+```
+
+3. Add nginx location block (before `/links-app/` in `/etc/nginx/sites-available/datro`):
+```nginx
+location /canvas/ {
+    alias /var/www/datro-ui/canvas/;
+    index index.html;
+    try_files $uri $uri/ /canvas/index.html;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header Cross-Origin-Resource-Policy "cross-origin" always;
+}
+```
+
+4. Reload nginx:
+```bash
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+5. Verify:
+```bash
+curl -s -b /tmp/cookies.txt "https://command.financecheque.uk/canvas/" | head -20
+```
+
+**Key directories in the deployed app:**
+| Path | Purpose |
+|------|---------|
+| `/canvas/index.html` | Main app shell (boot loader + iframe to pages/index.html) |
+| `/canvas/pages/index.html` | The full ad generator UI |
+| `/canvas/assets/` | CSS, JS, fonts, videos |
+| `/canvas/vendor/` | AdminLTE, Bootstrap, Google Fonts |
+| `/canvas/oak.png` | Default logo image |
+| `/canvas/menu.json` | Navigation menu config |
+
+**PITFALL — Relative paths:** The pcp `index.html` loads `assets/`, `vendor/`, and serves `pages/index.html` inside an iframe. All paths are relative, so the `/canvas/` alias must serve the entire tree, not just index.html.
+
+## Telegram Allowed Users — Inter-Agent Communication
+
+For agents to talk to each other, EVERY agent's `allowed_users` must include:
+1. The human user's Telegram chat_id
+2. Each bot's own Telegram user ID (from `getMe` API)
+
+**To discover bot user IDs:**
+```python
+import requests, json
+for agent in ['agent1', 'agent2', 'agent3', 'agent4']:
+    token = get_token_from_config(agent)
+    r = requests.get(f'https://api.telegram.org/bot{token}/getMe')
+    print(f"{agent}: id={r.json()['result']['id']}, username={r.json()['result']['username']}")
+```
+
+**To update each agent's config:**
+Edit `platforms.telegram.allowed_users` in each agent's `config.yaml`:
+```yaml
+platforms:
+  telegram:
+    enabled: true
+    token: "XXXXX"
+    allowed_users: '5837518218,BOT1_ID,BOT2_ID,BOT3_ID,BOT4_ID'
+```
+
+Then restart each agent:
+```bash
+sudo systemctl restart hermes-cmd-agent1 hermes-cmd-agent2 hermes-cmd-agent3 hermes-cmd-agent4
+```
+
+**PITFALL — Restart required:** Changing `allowed_users` in config.yaml doesn't take effect until the gateway process is restarted. Hot-reload doesn't pick up allowed users changes.
+
 ## PITFALL — Cloudflare Blocks Headless Scraping on car.financecheque.uk
 
 car.financecheque.uk has Cloudflare JS challenge enabled. Neither `curl`, Playwright headless Chromium, nor Puppeteer can bypass it. The challenge requires real browser fingerprinting. If you need to scrape this site, either:
