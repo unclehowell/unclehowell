@@ -118,6 +118,28 @@ score = usage_frequency × success_rate × recency_factor
 - Track decay trends to identify degrading knowledge areas
 - NEVER delete — always mark `status: superseded` with `superseded_by` link
 
+## Troubleshooting
+
+### "Honcho session could not be initialized"
+Common causes:
+
+1. **Truncated/redacted API key** -- The `apiKey` field in `~/.hermes/honcho.json` or `~/.hermes/honcho_api_key.env` may have been saved as `hch-v3...xxxx` instead of the full key (~88 chars). Check all config files contain the full key.
+
+2. **Config file locations** (checked in this order):
+   - `$HERMES_HOME/honcho.json` -- primary config (JSON with `hosts` block + `apiKey`)
+   - `$HERMES_HOME/honcho_api_key.env` -- `HONCHO_API_KEY=<full_key>`
+   - `$HERMES_HOME/config.yaml` -- `honcho.api_key` section
+
+3. **Gateway restart required** -- After updating any config file, restart the gateway to pick up changes:
+   ```
+   kill -9 $(pgrep -f 'hermes gateway run' | head -5)
+   bash ~/.hermes/gateway-run.sh &
+   ```
+
+4. **Honcho Python package must be installed** -- `pip show honcho_ai` should exist.
+
+5. **Verify with `honcho_profile` tool** -- After restart, call honcho_profile. If it still returns "session could not be initialized", check gateway logs: `journalctl --user -u hermes-gateway -n 50` or check `~/.hermes/logs/`.
+
 ## 2026 Research Updates
 
 ### Agent-as-Curator Pattern
