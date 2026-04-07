@@ -22,3 +22,12 @@
 ## Lesson
 
 For simple CLI questions: just run the help command first, don't explore. The brain exists to provide context - use it.
+
+## Prevention
+
+This mistake WILL repeat on fresh sessions because:
+1. OpenCode doesn't auto-read AGENTS.md at startup
+2. Each session starts blank
+3. No persistence between sessions
+
+**FIX APPLIED:** See /home/unclehowell/brain/scripts/opencode-fortify.sh (to be created)
