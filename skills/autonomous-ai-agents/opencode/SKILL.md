@@ -29,6 +29,13 @@ Use [OpenCode](https://opencode.ai) as an autonomous coding worker orchestrated 
 - Git repository for code tasks (recommended)
 - `pty=true` for interactive TUI sessions
 
+## Brain & Memory
+
+OpenCode should always use `/home/unclehowell/brain/` for memory and learnings:
+- Read skills from: `/home/unclehowell/brain/skills/`
+- Read memory from: `/home/unclehowell/brain/memory/`
+- Save lessons to: `/home/unclehowell/brain/memory/archive/learned/`
+
 ## Binary Resolution (Important)
 
 Shell environments may resolve different OpenCode binaries. If behavior differs between your terminal and Hermes, check:
