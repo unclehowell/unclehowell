@@ -21,6 +21,14 @@ PRINCE2 (PRojects IN Controlled Environments) is a process-driven, product-focus
 
 ## The 7 Principles (Mandatory Foundations)
 
+### PRINCE2 7th Edition (2023) Key Updates
+- **Outputs → Outcomes**: Focus shifted from product delivery to value delivery. Always ask "why" before "what".
+- **Sustainability mandate**: Every project must address environmental, social, and economic impacts.
+- **Human-centric focus**: Team psychology, emotional intelligence, and remote/hybrid dynamics are now core concerns.
+- **Elevated tailoring**: Framework is significantly less prescriptive — strip unnecessary controls for digital/Agile environments.
+
+Note: The "Organization" theme has been replaced by "**People**" (see themes below). The 7 principles remain structurally the same but with updated guidance emphasizing outcomes over outputs and value over products.
+
 No project proceeds unless ALL 7 principles are satisfied:
 
 | # | Principle | AI Agent Implementation |
