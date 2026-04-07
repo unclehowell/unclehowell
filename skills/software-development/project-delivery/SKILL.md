@@ -94,6 +94,27 @@ When tolerances are breached (time >±5%, quality <threshold, scope beyond MoSCo
 4. **Wait** — do NOT proceed until direction received
 5. **Resume** — execute approved direction, log outcome
 
+### Configurable Tolerance Patterns (2026 Update)
+Use machine-readable tolerance thresholds for AI agent workflows:
+```json
+{
+  "tolerances": {
+    "cost_usd": {"max": 15.00, "alert_at": 12.00},
+    "latency_ms": {"max": 3000, "alert_at": 2500},
+    "quality_score": {"min": 0.85, "alert_at": 0.90}
+  },
+  "process_gates": {
+    "stage_boundary": {"requires_approval": true, "auto_archive": true},
+    "exception": {"route_to": "human_supervisor", "pause_pipeline": true}
+  }
+}
+```
+
+### AI-Specific Exception Patterns
+- **Compute runaway**: auto-simplify prompts, switch to cheaper model, escalate if still OOB
+- **Quality degradation**: route to reviewer agent, apply fallback validation, flag for human review
+- **Scope expansion**: enforce MoSCoW strictly, generate change request, defer nice-to-haves
+
 ## Self-Improvement Loop
 
 After every task:
