@@ -119,9 +119,28 @@ bash ~/brain/scripts/sync.sh
 
 ## Key Pitfalls
 
-- **Memory tool unavailable in cron**: The `memory` tool doesn't work in cron context. Use brain files for archival instead.
+- **Memory tool ALWAYS unavailable in cron**: The `memory` tool returns error "Memory is not available. It may be disabled in config or this environment." CONFIRMED. Use brain files (`~/brain/memory/`) for archival and session_search for recall instead.
 - **No venv in some environments**: Check if `venv/` exists before `source venv/bin/activate`. Fall back to system `python3`.
 - **Brain symlink can resolve differently**: Always use `~/brain/` or `${BRAIN_ROOT}`, never hardcoded `/home/USERNAME/brain/`.
 - **Umbrella skills without root SKILL.md are NORMAL**: Don't try to "fix" them — they have nested sub-skills.
 - **Honcho config in multiple places**: Check both `~/.hermes/config.yaml` and `~/.hermes/honcho.json`.
 - **Checkpoints directory grows unbounded**: Monitor `~/.hermes/checkpoints/` — can consume GBs over time.
+- **Parallel research delegation works well**: Use `delegate_task` with 3 parallel web research tasks for PRINCE2, recursive self-improvement, and Honcho patterns. Each subagent produces structured output that feeds skill updates.
+- **Hermes config lives in repo directory**: Check `~/.hermes/hermes-agent/config.yaml` for tool settings, not just the root `~/.hermes/config.yaml`.
+- **Home directory has agent subdirectories**: `hermes_cmd_agent1-4` directories indicate multi-agent setup. Check each profile's config separately if auditing all.
+
+## Parallel Research Pattern (New - 2026-04-07)
+
+For comprehensive audits, use this delegation pattern to research all three domains simultaneously:
+
+```python
+delegate_task(
+    tasks=[
+        {"goal": "Research PRINCE2 methodology - 7 principles, themes, processes", "toolsets": ["web"]},
+        {"goal": "Research recursive self-improvement best practices for AI agents", "toolsets": ["web"]},
+        {"goal": "Research Honcho persistent memory integration patterns", "toolsets": ["web"]}
+    ]
+)
+```
+
+All 3 run concurrently (~90s total wall time), producing structured findings ready for skill patch integration.
