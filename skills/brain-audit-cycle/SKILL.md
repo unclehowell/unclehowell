@@ -145,7 +145,12 @@ The cron audit cycle includes cross-domain pattern detection and utility scoring
 - **Brain symlink can resolve differently**: Always use `~/brain/` or `${BRAIN_ROOT}`, never hardcoded `/home/USERNAME/brain/`.
 - **Umbrella skills without root SKILL.md are NORMAL**: Don't try to "fix" them — they have nested sub-skills.
 - **Honcho config in multiple places**: Check both `~/.hermes/config.yaml` and `~/.hermes/honcho.json`.
-- **Checkpoints directory grows unbounded**: Monitor `~/.hermes/checkpoints/` — can consume GBs over time.
+- **Checkpoints directory grows unbounded**: Monitor `~/.hermes/checkpoints/` — can consume GBs over time. CRITICAL: One large git session hit 4.2GB with loose objects + temp pack files. Clean aggressively:
+  ```bash
+  find ~/.hermes/checkpoints/ -name "tmp_*" -delete
+  find ~/.hermes/checkpoints/ -maxdepth 1 -mindepth 1 -type d -mtime +0 -exec rm -rf {} +
+  ```
+  This reduced checkpoints from 4.2GB to 6.2MB in one pass (2026-04-07).
 - **Parallel research delegation works well**: Use `delegate_task` with 3 parallel web research tasks for PRINCE2, recursive self-improvement, and Honcho patterns. Each subagent produces structured output that feeds skill updates.
 - **Hermes config lives in repo directory**: Check `~/.hermes/hermes-agent/config.yaml` for tool settings, not just the root `~/.hermes/config.yaml`.
 - **Home directory has agent subdirectories**: `hermes_cmd_agent1-4` directories indicate multi-agent setup. Check each profile's config separately if auditing all.
