@@ -123,22 +123,38 @@ score = usage_frequency × success_rate × recency_factor
 ### "Honcho session could not be initialized"
 Common causes:
 
-1. **Truncated/redacted API key** -- The `apiKey` field in `~/.hermes/honcho.json` or `~/.hermes/honcho_api_key.env` may have been saved as `hch-v3...xxxx` instead of the full key (~88 chars). Check all config files contain the full key.
+1. **Truncated/redacted API key** -- The `apiKey` field in `~/.hermes/honcho.json` or `~/.hermes/honcho_api_key.env` may have been saved as `hch-v3...xxxx` instead of the full key (~88 chars). Check all config files contain the full key. **All 3 config files must be updated together**: `honcho.json`, `honcho_api_key.env`, and `config.yaml`.
 
-2. **Config file locations** (checked in this order):
+2. **Config file locations** (checked in this order by `HonchoClientConfig.from_global_config()`):
    - `$HERMES_HOME/honcho.json` -- primary config (JSON with `hosts` block + `apiKey`)
-   - `$HERMES_HOME/honcho_api_key.env` -- `HONCHO_API_KEY=<full_key>`
-   - `$HERMES_HOME/config.yaml` -- `honcho.api_key` section
+   - `~/.honcho/config.json` -- legacy global
+   - Falls back to env vars (`HONCHO_API_KEY`, `HONCHO_BASE_URL`) if no file found.
+   - **Also updated**: `$HERMES_HOME/config.yaml` -- `honcho.api_key` section (gateway reads this)
 
-3. **Gateway restart required** -- After updating any config file, restart the gateway to pick up changes:
+3. **Gateway restart required** -- After updating any config file, restart the gateway. Be careful to kill **all** old processes first -- they may respawn or conflict:
    ```
-   kill -9 $(pgrep -f 'hermes gateway run' | head -5)
+   kill -9 $(pgrep -f 'hermes gateway run')
+   sleep 3
+   kill -9 $(pgrep -f 'hermes gateway run') 2>/dev/null  # retry in case of respawn
    bash ~/.hermes/gateway-run.sh &
    ```
+   If multiple gateway instances conflict (port/lock held), kill the older one first. The second gateway will exit with "PID already in use" errors.
 
-4. **Honcho Python package must be installed** -- `pip show honcho_ai` should exist.
+4. **Verify API key directly** -- If tools still fail after restart, test with direct Python SDK:
+   ```
+   python3 -c "
+   from honcho import Honcho; import json
+   cfg = json.load(open('/home/ubuntu/.hermes/honcho.json'))
+   h = Honcho(workspace_id='hermes', api_key=cfg['apiKey'])
+   for p in h.peers(): print(p.id)
+   for s in h.sessions(): print(s.id)
+   "
+   ```
+   This isolates whether the key is valid vs. a gateway/plugin init issue.
 
-5. **Verify with `honcho_profile` tool** -- After restart, call honcho_profile. If it still returns "session could not be initialized", check gateway logs: `journalctl --user -u hermes-gateway -n 50` or check `~/.hermes/logs/`.
+5. **Honcho Python package must be installed** -- `pip show honcho_ai` should exist.
+
+6. **Check gateway logs** -- `tail -50 ~/.hermes/logs/gateway.log` for Honcho init messages. Look for "Initializing Honcho client" followed by "Honcho session 'hermes-agent' retrieved" (success) vs. errors.
 
 ## 2026 Research Updates
 
