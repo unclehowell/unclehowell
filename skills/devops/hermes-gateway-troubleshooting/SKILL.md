@@ -241,6 +241,39 @@ platforms:
     enabled: false
 ```
 
+## Problem: Tool call spam on WhatsApp/Telegram
+
+By default, Hermes forwards every tool call execution as a progress message to messaging platforms (WhatsApp, Telegram). These look like:
+- "🐍 execute_code: \"from hermes_tools import...\""
+- "🔧 terminal: grep -rn tool_call..."
+
+This triggers **WhatsApp spam detection** (getting blocked) and **Telegram rate limiting** (throttled).
+
+### Fix: Disable tool progress on all agents
+
+```yaml
+# In each agent's config.yaml
+display:
+  tool_progress: "off"          # Disable tool call forwarding to platforms
+  tool_progress_command: false  # Disable /verbose command
+```
+
+The default is `"all"` which sends every tool call. Valid values:
+- `"off"` — nothing sent (recommended for production)
+- `"new"` — only shown when tool changes
+- `"all"` — every tool call (default, dangerous for WhatsApp)
+- `"verbose"` — every tool call with full arguments
+
+**Apply to all agents:** The setting must be in EACH agent's config.yaml (`~/.hermes/config.yaml` AND `~/hermes_cmd_agentN/config.yaml`). Setting it on the default agent alone won't affect the cmd agents.
+
+**Verify after applying:** Restart the gateway, then check that no emoji-prefixed tool messages appear on WhatsApp/Telegram. Only final plain text responses should be sent.
+
+### Code reference
+- `gateway/run.py:6218-6229` — reads `display.tool_progress`, defaults to `"all"`
+- `gateway/run.py:6229` — `tool_progress_enabled = progress_mode != "off" and source.platform != Platform.WEBHOOK`
+- When `"off"`, `progress_queue=None` and `progress_callback` is a no-op
+- Webhook platform is ALWAYS excluded (line 6229)
+
 ## Port Conflicts
 
 - Webhook port 8644: Used by default gateway
