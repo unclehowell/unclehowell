@@ -59,10 +59,10 @@ skills_list [category=devops]
 skill_view name=skill-name
 
 # Save a durable fact
-memory action="add" target="memory" content="the fact"
+Write to brain memory files or archive directly
 
 # Archive to brain (cross-agent sharing)
-Write to ~/brain/memory/archive/learned/YYYY-MM-DD/
+Write to ${BRAIN_ROOT}/memory/archive/learned/YYYY-MM-DD/
 
 # Close the loop
 bash ~/brain/scripts/sync.sh
