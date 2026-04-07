@@ -48,7 +48,8 @@ No project proceeds unless ALL 7 principles are satisfied:
 | Theme | What It Means | AI Agent Practice |
 |-------|--------------|-------------------|
 | **Business Case** | Why are we doing this? | Tag tasks with value metrics. De-scope low-ROI work. Update business case at each gate with actual vs forecast (cost, velocity, defects). Validate viability ≥ 3 KPIs. |
-| **Organization** | Who does what? | Use role templates (Architect, Implementer, Reviewer, QA). RACI matrix for AI vs human decisions. Maintain stakeholder communication matrix. |
+| **People** (was Organization, 7th Edition 2023) | Who does what + team dynamics | Use role templates. RACI matrix. Team psychology, conflict resolution, psychological safety. Remote/hybrid working considerations. |
+| **Organization** | [Legacy] Who does what? | Use role templates (Architect, Implementer, Reviewer, QA). RACI matrix for AI vs human decisions. Maintain stakeholder communication matrix. |
 | **Quality** | What does "good" look like? | Codify quality gates: lint, type-check, test coverage, security scan. Self-validate before submission. Maintain quality register tracking all checks. |
 | **Plans** | How, when, by whom? | Generate hierarchical task graphs with dependencies, time budgets, milestones. Update based on actual velocity. Decompose product descriptions into tickets. |
 | **Risk** | What could go wrong? | Pre-scan: dependency conflicts, breaking changes, tech debt. Maintain risk register with probability × impact scoring. Auto-execute mitigations or escalate cumulative exposure > threshold. |
