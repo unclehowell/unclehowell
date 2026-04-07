@@ -28,9 +28,12 @@ tail -30 ~/.hermes/logs/gateway.log
 
 This is **NOT** an authentication failure. The token is valid. It's a **scoped lock conflict** between multiple gateway instances using the same bot token.
 
-### Root Cause
+### Root Causes
 
-Hermes uses file-based locks to prevent multiple gateways from polling the same Telegram bot simultaneously. When a second gateway starts with the same token, it detects the lock and fails to connect. Users see this as a "401" or connection failure.
+1. **Scoped lock conflict** — Hermes uses file-based locks to prevent multiple gateways from polling the same Telegram bot simultaneously.
+2. **Env var override** — `TELEGRAM_BOT_TOKEN` set in env (systemd `.service` file, `gateway.env`, or `~/.hermes/.env`) **overrides** `enabled: false` in `config.yaml`. The gateway reads the env var and connects regardless of the config setting.
+3. **Systemd service file** — The `/etc/systemd/system/hermes-gateway.service` may hardcode `Environment=TELEGRAM_BOT_TOKEN=...`. This takes priority over ALL config.yaml settings. You MUST remove it from the service file if you want to disable Telegram on the default agent.
+4. **Per-session gateway spawning** — Each new CLI session can spawn its own gateway process, which conflicts with systemd-managed gateways.
 
 ### Lock File Location
 
