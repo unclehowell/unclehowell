@@ -411,6 +411,37 @@ Paperclip does NOT use `/api/companies/me` or `/api/agents`. Correct patterns:
 
 **WhatsApp number:** +44773262 (partial — full number known to user). Update the `wa.me/` href if it changes.
 
+## Server Maintenance & Update Procedures
+
+### Full Maintenance Checklist
+1. **System packages:** `sudo apt-get update && sudo apt-get upgrade -y`
+2. **Hermes agent:** `cd /home/ubuntu/.hermes/hermes-agent && git pull` then `pip3 install -e . --break-system-packages`
+3. **Datro repo:** `cd /home/ubuntu/datro && git pull`
+4. **Sync UI script:** Set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` env vars, then `bash /home/ubuntu/datro/sync-ui.sh`
+5. **PM2:** `sudo pm2 update`
+6. **Service health:** `systemctl is-active nginx hermes-gateway netdata jellyfin auth-server gui`
+7. **Disk usage:** `df -h`
+
+### PITFALL — Hermes Agent: Local Changes Block git pull
+The local `gateway/run.py` has custom modifications that conflict with upstream merges. Before pulling:
+```bash
+cd /home/ubuntu/.hermes/hermes-agent
+git stash && git pull && git stash pop
+```
+The hermes-agent is installed as an editable package via `pip3 install -e . --break-system-packages`. No venv exists; packages are in `~/.local/lib/python3.12/`.
+
+### PITFALL — Datro Repo: Sparse Checkout Blocks sync-ui.sh
+The datro repo has sparse checkout enabled, which blocks `sync-ui.sh` from seeing 38+ dirty files (the script fails with exit code 1).
+**Fix before running sync script:**
+```bash
+cd /home/ubuntu/datro
+git sparse-checkout disable
+```
+After disabling, the sync script will see all dirty files and proceed normally.
+
+### PITFALL — sync-ui.sh Commits Massive Diffs to gh-pages
+The sync script runs `git add -A && git commit` when dirty files exist, which can commit 14,000+ files (including docusaurus sites, bpvsbuckler archives, library builds) to the `gh-pages` branch. Review the branch state after sync to ensure the push succeeded and clean up if needed.
+
 ## Pitfalls
 - **Avatar iframe mic permissions:** Must include `allow="microphone"` and `sandbox="allow-scripts allow-same-origin ..."`. If mic fails, the parent page can proxy via `postMessage({ type: 'request-mic' })`.
 - **Avatar in split view:** Must be compact — use `min(90px, 28vw)` for sizing, percentage-based positioning, and no scrollbar. The top half is only 50% viewport height.
