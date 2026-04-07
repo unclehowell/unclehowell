@@ -44,3 +44,34 @@ All agents share knowledge through this brain. Memory of what has been happening
 ## Communication Rules
 
 - Read `user-keyboard.md` for keyboard constraints
+
+## User Preferences (merged from profiles 2026-04-06)
+
+**Identity:**
+- Name: Sion Buckler
+- Telegram: @unclehowell
+- Telegram Chat ID: 5837518218
+- Timezone: America/Buenos_Aires (GMT-3)
+
+**Communication Style:**
+- Prefers CLI-style, direct communication (no markdown headers)
+- Wants sound notifications: 880hz low tone while agent runs, higher pitch chime on success, buzzer on failure
+- Expects fixes to be PERMANENT, not temporary workarounds
+- Expects "never accept defeat" attitude - persistent troubleshooting
+- Wants proper solutions without shortcuts
+
+**Environment:**
+- Primary brain: /home/unclehowell/brain/ (public GitHub repo - NO SECRETS here)
+- Hermes at /home/unclehowell/.hermes/
+- Brain syncs to public repo - store credentials in .env files only
+
+**Projects:**
+- AWS infrastructure setup (EC2, Elastic IPs) for hosting web interfaces
+- datro and paperclip repositories
+- Multi-profile Hermes setup
+- Deploying C2 servers, mirroring local environments
+
+**Important Notes:**
+- When encountering 'externally-managed-environment' on Debian/Ubuntu, use `pipx` or local venv
+- MCP/Paperclip web GUI preferred over terminal CLI
+- Reverse-engineer web apps into reusable skills (e.g., PCP ad generator)
