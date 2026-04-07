@@ -125,6 +125,46 @@ After every task:
 
 Track across ≥2 orthogonal dimensions: pass rate, token cost, iteration count, regression rate.
 
+## Exception Patterns (AI Agent Specific)
+
+Common exception scenarios and automated responses:
+
+| Exception Trigger | Auto-Response | Escalation |
+|---|---|---|
+| Compute budget exceeded | Switch to cheaper model, simplify approach | If still OOB after 2 attempts |
+| Quality gate failure | Revert, analyze root cause, retry with fixed approach | If 3 retries fail |
+| Scope expansion detected | Enforce MoSCoW, defer non-critical items | If user insists on scope change |
+| Dependency conflict | Isolate in sandbox, find alternative | If no alternative exists |
+| Service unavailable | Retry with exponential backoff (max 3) | If all retries fail |
+
+## Multi-Agent Delegation Patterns
+
+When using `delegate_task` for project execution:
+
+1. **Task decomposition**: Break work packages into independent sub-tasks with `tasks` array (max 3 parallel)
+2. **Context passing**: Include all needed file paths, error messages, constraints in `context` field
+3. **Toolset selection**: Use `toolsets=["web"]` for research, `toolsets=["terminal"]` for execution
+4. **Validation**: Each sub-agent returns structured output; validate against product descriptions
+5. **Integration**: Merge outputs, run quality gates, produce stage boundary report
+
+## Research-Backed Improvements (2026-04-07)
+
+### From Recursive Self-Improvement Research
+- **Trace collection**: Log `(input, decision_path, tool_calls, test_results)` for successful tasks
+- **Reflexion loop**: After failure → error analysis → revised plan → retry (max 3 depth)
+- **Asymmetric update cadence**: Fast (prompts/memory), Slow (tool routing), Rare (architecture)
+- **Confidence calibration**: Output `p_success` before execution, track calibration over time
+- **Adversarial verification**: Dedicated verification pass before marking tasks complete
+
+### From Honcho Memory Research
+- **Hybrid retrieval**: Metadata filter → vector search → rerank by relevancy
+- **Chunk normalization**: Store facts as self-contained assertions, < 200 words
+- **Deduplication on ingest**: Cosine similarity > 0.85 triggers merge/skip
+- **TTL management**: Set `expires_at` during creation for auto-eviction
+- **Cross-context sharing**: Use shared `app_id` + differentiated metadata for agent-to-agent memory
+
+---
+
 ## Usage
 
 1. Start at MANDATE for any multi-step task
