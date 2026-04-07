@@ -292,14 +292,37 @@ When receiving a new task:
 
 ---
 
+## Agile & Digital Mapping (7th Edition 2023)
+
+| PRINCE2 Concept | Agile/Digital Equivalent |
+|-----------------|-------------------------|
+| Management Stages | Releases (collections of features) |
+| Work Packages | Sprints |
+| Team Plans | Scrum/Kanban boards |
+| Checkpoint Reports | Daily stand-ups / burn-down reviews |
+| Risk Register | Risk Burndown charts in Jira/Azure DevOps |
+| Tolerances | Sprint boundaries + Definition of Done |
+
+### Software-Specific Pitfalls & Mitigations
+
+| Pitfall | Mitigation |
+|---------|-----------|
+| Heavy documentation bloat (100-page PID for a small feature) | Tailor PID — use lightweight Project Mandate + Product Backlog, keep docs "just barely sufficient" |
+| Waterfall delivery within stages | Shorten stages to 2-4 weeks, deliver MVP at stage end for continuous justification |
+| Change control bottlenecks on minor UI/backlog tweaks | Set broad tolerances for team — pre-approve backlog grooming within sprint |
+| Ignoring technical debt (quality theme focuses only on UAT) | Include non-functional requirements (coverage, refactoring, security, latency) as quality criteria |
+| Role collision (PO vs Senior User, Scrum vs PM) | Unify roles: PM=Scrum Master, Senior User=PO, Senior Supplier=Lead Architect |
+
 ## Anti-Patterns (Avoid These)
 
-- ❌ Coding before understanding the product (violates Focus on Products)
+- ❌ Coding before understanding the product (violates Focus on Products / Value Focus)
 - ❌ Changing scope without approval (violates Change Control)
 - ❌ Proceeding after tolerance breach (violates Manage by Exception)
 - ❌ Skipping quality gates to "move fast" (violates Quality Management)
 - ❌ Not documenting how things went (violates Learn from Experience)
-- ❌ Self-approving production changes (violates Defined Roles)
+- ❌ Self-approving production changes (violates Defined Roles / People theme)
+- ❌ Creating 100-page PIDs for small features (violates Tailoring to Environment)
+- ❌ Ignoring technical debt and non-functional requirements (violates Quality theme scope)
 
 ---
 ---
