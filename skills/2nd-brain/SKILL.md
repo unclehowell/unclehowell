@@ -36,7 +36,7 @@ On this machine, the home directory is `/home/ubuntu`, not `/home/unclehowell`.
 AT SESSION START:
 1. Load this skill (2nd-brain)
 2. Run session_search to check for relevant past sessions
-3. Read /home/unclehowell/brain/memory/context/current.md for active priorities
+3. Read ${BRAIN_ROOT}/memory/context/current.md for active priorities
 4. Load relevant skills matching the task
 
 DURING WORK:
