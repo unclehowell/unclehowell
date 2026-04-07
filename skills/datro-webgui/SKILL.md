@@ -183,9 +183,26 @@ When modifying `/home/ubuntu/datro/static/ui/index.html`, **do NOT rewrite from 
 
 This means it only allows itself and financecheque.uk to embed it. Since the UI is on `command.financecheque.uk`, the iframe gets blocked. **To fix:** Add `https://command.financecheque.uk` to the CSP on the ai.financecheque.uk server.
 
-## PITFALL — Paperclip Database Uses finance_events for Currency, Not Companies
+## Paperclip Billing Currency Change (USD → GBP)
 
-Paperclip's billing currency lives in the `finance_events.currency` column (default 'USD'). The `companies` table may not have a currency column. Always check `information_schema` first. Currency update script in `~/paperclip-fix/update_currency.js`.
+Script: `~/paperclip-fix/update_currency.js`
+
+```js
+const { Client } = require('pg');
+const client = new Client({ host: '127.0.0.1', port: 54329, user: 'paperclip', password: 'paperclip', database: 'paperclip' });
+```
+
+**Steps (already in the script):**
+1. `ALTER TABLE companies ADD COLUMN currency text NOT NULL DEFAULT 'GBP'` (if not exists)
+2. `UPDATE companies SET currency = 'GBP' WHERE currency != 'GBP'`
+3. `ALTER TABLE finance_events ALTER COLUMN currency SET DEFAULT 'GBP'`
+4. `UPDATE finance_events SET currency = 'GBP' WHERE currency != 'GBP'`
+
+Run: `cd /home/ubuntu/paperclip-fix && node update_currency.js`
+
+Verified: company "Finance Cheque UK" now shows `"currency": "GBP"` via `GET /companies/{id}`.
+
+## PITFALL — Paperclip Database Uses finance_events for Currency, Not Companies
 
 ## Paperclip API Endpoint Patterns
 
