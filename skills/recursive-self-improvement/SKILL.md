@@ -263,6 +263,125 @@ Track orthogonal metrics — don't game one metric at the expense of others
 
 ---
 
+## Pattern 10: Skill Lifecycle with Active Prune Phase (Critical)
+
+The single most dangerous gap in agent self-improvement is **skill hoarding without pruning**. Append-only skill growth leads to context pollution and retrieval degradation.
+
+### Complete Lifecycle
+```
+Extract → Formalize → Validate → Deploy → Monitor → PRUNE
+```
+
+| Phase | Action | Signal |
+|-------|--------|--------|
+| **Extract** | Mine successful interactions for reusable patterns | Pattern appears ≥3 times |
+| **Formalize** | Convert to typed, testable specification | Input/output schemas defined |
+| **Validate** | Run against benchmark suites | Pass rate ≥85% |
+| **Deploy** | Register in skill library with metadata | Usage tracking enabled |
+| **Monitor** | Track success rates, failure modes, drift | Telemetry collected |
+| **PRUNE** | Archive/retire underperforming skills | Success rate <60% over 30 days |
+
+### Pruning Criteria
+- Skill unused for >30 days → **archive**
+- Success rate <60% over 10+ attempts → **review, then archive if unfixable**
+- Superseded by better skill → **mark `superseded_by: <new_skill>`**
+- Conflicts with other skills (retrieval collisions) → **deduplicate**
+
+### NEVER delete — always archive
+Mark as `status: supseded` with `superseded_by` link. This preserves the learning trail.
+
+---
+
+## Pattern 11: DSPy-Style Prompt Compilation
+
+**Treat prompts as compilable artifacts, not static strings.**
+
+### Key Insight (Khattab et al., Stanford)
+Automatic prompt optimization through few-shot example discovery significantly outperforms manual prompt engineering.
+
+### Implementation
+1. Treat each skill's guidance as an optimizable template
+2. Collect successful examples from actual task completions
+3. Auto-inject the best few-shot examples into the skill's usage guidance
+4. Track which prompt variants produce highest success rates
+5. Promote winning variants, archive losers
+
+---
+
+## Pattern 12: Meta-Evaluation (Anti-Goodhart)
+
+**Without meta-evaluation, agents fall victim to Goodhart Law — optimizing proxy metrics instead of actual improvement.**
+
+### What to Measure
+| Metric | Proxy | Anti-Gaming Check |
+|--------|-------|-------------------|
+| Task completion | Pass/fail rate | Also measure task quality post-completion |
+| Efficiency | Token cost | Also measure correctness — cheap wrong answers still waste time |
+| Iteration count | Number of tool calls | Also measure first-call accuracy |
+| Memory utility | Retrieval hit rate | Also measure retrieval usefulness (did it actually help?) |
+
+### Implementation
+- Run parallel evaluation: "Did this skill update actually help on a fresh task?"
+- Use blind A/B testing when possible (skill version A vs B on similar tasks)
+- Independent verification — tool-verified QA (CRITIC pattern) catches self-biased evaluation
+
+---
+
+## Pattern 13: Memory Consolidation Cycles (Sleep-Like Processing)
+
+**Periodic offline memory consolidation dramatically improves memory quality — analogous to human sleep.**
+
+### How It Works
+1. **During active sessions**: Write episodic memories (raw task traces, learnings)
+2. **During consolidation** (off-peak hours):
+   - Compress episodic → semantic (extract principles from specific instances)
+   - Generalize lessons across domains (cross-domain transfer learning)
+   - Remove contradictions (identify conflicting facts, resolve)
+   - Enforce token budgets per memory tier
+3. **Archival**: Move old consolidated knowledge to lower retrieval tiers
+
+### Cross-Domain Transfer Learning
+Agents that transfer patterns between domains improve faster than domain-isolated agents:
+- Error-handling patterns from Python → JavaScript
+- Testing strategies from backend → frontend
+- Architecture patterns from one project → structurally similar projects
+
+---
+
+## Pattern 14: Agentic Computer Interfaces (ACI)
+
+**Formal machine-readable interfaces between agent and environment dramatically improve performance** (SWE-agent, Princeton 2024).
+
+### ACI Principles
+- Agent tools should have formal, typed interfaces — NOT natural language descriptions
+- Skills should specify input/output schemas explicitly
+- Skill interfaces should be machine-readable for automatic composition
+- Enable safe composition through formal contracts between skills
+
+### Implementation
+- Use JSON schemas for all tool inputs and outputs
+- Define preconditions and postconditions for skills
+- Support skill composition through DAG-based dependency graphs
+- Version pin skills to enable safe rollback
+
+---
+
+## Pattern 15: Self-Play Training Signal Generation
+
+**Self-play creates infinite training signal without requiring external data.**
+
+### Patterns
+- Agents generate bugs then fix them (bug-injection → detection → fix cycles)
+- Adversarial pairs: one writes vulnerable code, another finds vulnerabilities
+- Auto-generate edge cases from existing code patterns
+- Challenge-response: generate hard test cases for your own implementations
+
+### Safety
+- All self-play happens in isolated contexts (use `execute_code` sandbox)
+- Self-play results feed skills/memory only after independent verification
+
+---
+
 ## Honcho Multi-Context Memory Integration
 
 When operating across multiple profiles, projects, and sessions, use Honcho for structured persistent memory:
