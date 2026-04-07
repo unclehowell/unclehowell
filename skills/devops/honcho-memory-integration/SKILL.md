@@ -88,3 +88,26 @@ Create → Tag → Retrieve → Use → Update/Supersede → Archive
 5. **Archival discipline** — mark completed project memories as `status:archived` rather than deleting.
 6. **Async writes are safe** — Honcho's async write mode handles queuing and retry automatically.
 7. **Check memory count** — regular monitoring of fact count per user/AI peer to detect accumulation issues.
+
+## Memory Consolidation Cycles
+
+Like human sleep, agents need periodic offline memory consolidation:
+
+### During Active Sessions
+- Write episodic memories: raw task traces, specific learnings, session facts
+- Tag with `session_id`, `timestamp`, `context` for temporal tracking
+
+### During Consolidation (off-peak, via cron)
+1. **Compress** episodic → semantic: extract general principles from specific instances
+2. **Generalize** across domains: transfer learning between projects (cross-domain pattern detection)
+3. **Deduplicate**: find semantically similar memories (similarity > 0.85), merge or supersede
+4. **Resolve contradictions**: identify conflicting facts, flag for resolution
+5. **Enforce budgets**: cap memory count per retrieval tier (High: ≤50, Medium: ≤200, Low: ≤500)
+
+### Utility Score Decay
+```
+score = usage_frequency × success_rate × recency_factor
+```
+- Purge memories with score < 0.2 during consolidation
+- Re-score all memories monthly
+- Track decay trends to identify degrading knowledge areas
