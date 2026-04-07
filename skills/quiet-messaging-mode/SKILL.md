@@ -37,7 +37,11 @@ When the conversation origin is **Telegram** or **WhatsApp**, apply QuietMessagi
 - Default to: read files, make edits, run quick checks.
 - If something requires deep investigation, ask first: "Need to dig deeper into X — OK?"
 
-## Implementation Notes
+### Implementation Notes
+
+**Gateway patch location:** `gateway/run.py`, inside `_run_agent()`, after `combined_ephemeral` is built (around line 6385). The patch adds quiet mode rules to `combined_ephemeral` when `source.platform` is `Platform.TELEGRAM` or `Platform.WHATSAPP`. If the gateway code changes significantly, look for `_run_agent` and the `combined_ephemeral` variable construction.
+
+**Note:** The AIAgent constructor already passes `quiet_mode=True` for all gateway sessions. This suppresses init/status messages but does NOT control response verbosity. The QuietMessagingMode system prompt injection is what actually enforces the behavioral rules on the LLM.
 
 ### Config Settings
 These config.yaml values enforce quiet mode:
