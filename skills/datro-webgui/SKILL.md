@@ -323,12 +323,55 @@ sudo systemctl restart hermes-cmd-agent1 hermes-cmd-agent2 hermes-cmd-agent3 her
 
 **PITFALL — Restart required:** Changing `allowed_users` in config.yaml doesn't take effect until the gateway process is restarted. Hot-reload doesn't pick up allowed users changes.
 
+## car.financecheque.uk Site Content (Scraped)
+
+The site is a **PCP refund claims service** — "PCP Refund" (trading name of Jigsaw Claims Ltd, FCA #912323, Manchester). Dark theme with green (#4ade80) and gold accents. Key content:
+
+- **H1:** "WERE YOU MIS-SOLD CAR FINANCE?"
+- **Tagline:** "Join thousands reclaiming what they're owed. The FCA is investigating secret commissions"
+- **Stats:** Average refund £1,100 (FCA confirmed £829), deadline August 31 2027
+- **CTA:** "Check Eligibility" at /claim
+- **Marquee:** "NO WIN NO FEE* • FCA INVESTIGATION • CHECK ELIGIBILITY"
+- **Contact:** info@jigsawclaims.co.uk
+- **Brand colors:** Dark slate (#0f172a), green (#10b981), gold accent
+- **Tech stack:** React SPA with TailwindCSS, Lucide icons, Unsplash images
+
+**Full scrape saved at:** `/tmp/car_site_content.txt`
+**Screenshot at:** `/tmp/car_financecheque_screenshot.png`
+
 ## PITFALL — Cloudflare Blocks Headless Scraping on car.financecheque.uk
 
-car.financecheque.uk has Cloudflare JS challenge enabled. Neither `curl`, Playwright headless Chromium, nor Puppeteer can bypass it. The challenge requires real browser fingerprinting. If you need to scrape this site, either:
-1. Temporarily set Cloudflare to "Essentially Off" (or pause it) for 30 seconds
-2. Use a cloud browser automation service (Browserbase, ScrapeOps)
-3. Ask the user for the content directly
+car.financecheque.uk serves a Cloudflare JS challenge to curl (403). Headless Chromium without fingerprint randomisation also gets blocked. But Playwright with a realistic user agent + 8-second delay after domcontentloaded DOES bypass the challenge.
+
+**Working approach:**
+```python
+import asyncio
+from playwright.async_api import async_playwright
+
+async with async_playwright() as p:
+    browser = await p.chromium.launch(headless=True)
+    context = await browser.new_context(
+        viewport={'width': 1920, 'height': 1080},
+        user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
+    )
+    page = await context.new_page()
+    await page.goto('https://car.financecheque.uk', wait_until='domcontentloaded', timeout=30000)
+    await asyncio.sleep(8)  # Allow Cloudflare challenge JS to execute
+    screenshot = await page.screenshot(path='/tmp/car_financecheque_screenshot.png', full_page=True)
+    text = await page.inner_text('body')
+    html = await page.content()
+    await browser.close()
+```
+
+**Requirements:** `pip3 install --break-system-packages playwright` then `python3 -m playwright install chromium`
+
+## WhatsApp Allowed Users
+
+WhatsApp allowed users is configured in `~/.hermes/.env`:
+```
+WHATSAPP_ALLOWED_USERS=+447****3262,+447860272148
+```
+Comma-separated list. The masking you see in tool output (showing `****`) is display-level redaction only — the actual file contains uncensored digits. Gateway must be restarted for WhatsApp config changes to take effect.
 
 ## Paperclip Billing Currency Change (USD → GBP)
 
