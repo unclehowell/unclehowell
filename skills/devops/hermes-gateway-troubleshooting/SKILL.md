@@ -55,26 +55,61 @@ This is the #1 missed cause. The systemd service may be injecting the token at t
 grep TELEGRAM_BOT_TOKEN /etc/systemd/system/hermes-gateway.service
 ```
 
-If found, it overrides everything. Remove it:
+If found, it overrides everything (config.yaml `enabled: false`, token removal from .env, etc.). Remove it:
 
 ```bash
 sudo sed -i '/TELEGRAM_BOT_TOKEN=/d' /etc/systemd/system/hermes-gateway.service
 sudo systemctl daemon-reload
-sudo systemctl restart hermes-gateway
+sudo systemctl start hermes-gateway
 ```
+
+For per-agent services (hermes-cmd-agent1-4), check each: `/etc/systemd/system/hermes-cmd-agent*.service`
 
 **Step 2: Check for env var overrides**
 
-Check if TELEGRAM_BOT_TOKEN leaked into environment:
+The gateway reads `TELEGRAM_BOT_TOKEN` from the **environment** first, which overrides `config.yaml`. Sources in load order:
 
+1. systemd `Environment=` directives (highest priority)
+2. `~/.hermes/gateway.env` (sourced by `gateway-run.sh`)
+3. `~/.hermes/.env` (not sourced by bashrc — agents must source explicitly)
+
+Check all sources:
 ```bash
 env | grep TELEGRAM_BOT_TOKEN
 grep TELEGRAM_BOT_TOKEN ~/.hermes/gateway.env ~/.hermes/.env
 ```
 
-Remove from any file where the agent shouldn't have Telegram.
+If an agent shouldn't use Telegram, remove the token from ALL of these.
 
-**Step 3: Verify config.yaml**
+**Step 3: Remove the telegram platform section entirely**
+
+If `enabled: false` doesn't work (gateway still connects), remove the entire `telegram` key from `platforms:` in config.yaml AND remove the token from env files:
+
+```python
+import yaml
+with open('config.yaml') as f:
+    cfg = yaml.safe_load(f)
+if 'telegram' in cfg.get('platforms', {}):
+    del cfg['platforms']['telegram']
+with open('config.yaml', 'w') as f:
+    yaml.dump(cfg, f)
+```
+
+**Step 4: Use systemd instead of manual gateway spawning**
+
+This system uses systemd for gateway management. Manual `hermes gateway run` spawns conflict with systemd services:
+
+```bash
+# Check service status
+systemctl status hermes-gateway hermes-cmd-agent{1,2,3,4} --no-pager | grep -E 'Loaded|Active'
+
+# Stop all, clean, restart
+sudo systemctl stop hermes-gateway hermes-cmd-agent{1,2,3,4}
+rm -f ~/.local/state/hermes/gateway-locks/*.lock
+sudo systemctl start hermes-cmd-agent{1,2,3,4}
+```
+
+Only start the default agent via systemd if Telegram is enabled for it.
 
 **Step 1: Identify all running gateways**
 
