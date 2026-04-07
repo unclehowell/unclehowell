@@ -155,7 +155,17 @@ The cron audit cycle includes cross-domain pattern detection and utility scoring
 - **Hermes config lives in repo directory**: Check `~/.hermes/hermes-agent/config.yaml` for tool settings, not just the root `~/.hermes/config.yaml`.
 - **Home directory has agent subdirectories**: `hermes_cmd_agent1-4` directories indicate multi-agent setup. Check each profile's config separately if auditing all.
 
-## Parallel Research Pattern (New - 2026-04-07)
+## Checkpoints Cleanup Script (2026-04-07)
+
+```bash
+# Aggressive checkpoint cleanup - saves multi-GB
+find ~/.hermes/checkpoints/ -name "tmp_*" -delete 2>/dev/null
+find ~/.hermes/checkpoints/ -maxdepth 1 -mindepth 1 -type d -mtime +0 -exec rm -rf {} + 2>/dev/null
+# Result: 4.2GB → 6.2MB
+```
+
+## Memory Tool Availability (CRITICAL)
+Memory tool is DISABLED in this environment. Confirmed: returns "Memory is not available." Use brain files (`~/brain/memory/`) and session_search instead.
 
 For comprehensive audits, use this delegation pattern to research all three domains simultaneously:
 
