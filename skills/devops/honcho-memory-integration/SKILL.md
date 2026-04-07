@@ -1,7 +1,7 @@
 ---
 name: honcho-memory-integration
 description: Honcho persistent memory integration patterns for multi-context AI agent environments. Use when managing memory across multiple agents, projects, or sessions — structuring facts, cross-context retrieval, memory lifecycle management, conflict prevention, and agent-to-agent memory sharing.
-version: 1.0.0
+version: 1.1.0
 author: Hermes Agent
 metadata:
   hermes:
