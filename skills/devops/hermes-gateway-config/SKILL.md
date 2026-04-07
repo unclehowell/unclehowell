@@ -67,27 +67,91 @@ GATEWAY_ALLOW_ALL_USERS=true
 
 ### Common Error: "Another local Hermes gateway is already using this Telegram bot token"
 
-This is **NOT a 401 auth error**. It means multiple gateway processes are running and competing for the same token via a scoped lock.
+This is **NOT a 401 auth error or Telegram API failure**. It means multiple gateway processes are running and competing for the same token via a scoped lock on disk.
 
-Fix:
+#### How the Lock Mechanism Works
+
+Lock files live at `~/.local/state/hermes/gateway-locks/` with naming pattern:
+- `telegram-bot-token-{identity_hash}.lock` — one per unique bot token
+- `whatsapp-session-{identity_hash}.lock` — one per unique session
+
+Each lock file stores the PID of the gateway that owns it. When a new gateway starts, it:
+1. Checks if a lock file exists for this token
+2. If yes, tests if the PID is still alive via `os.kill(pid, 0)`
+3. If the PID is alive → blocks with "Another gateway is already using this token"
+4. If the PID is dead → removes stale lock and proceeds
+
+#### Multi-Token Architecture
+
+On this server, there are **5 agents** with **4 distinct Telegram tokens**:
+| Agent | Token Owner | PID | Status |
+|-------|------------|-----|--------|
+| cmd_agent1 | Unique bot | 7514 | Connected |
+| cmd_agent2 | Unique bot | 7511 | Connected |
+| cmd_agent3 | Unique bot | 7508 | Connected |
+| cmd_agent4 | Unique bot | 7512 | Connected |
+| **default** | Same as cmd_agent1 | -- | **LOCK CONFLICT** |
+
+The default agent shares its token with one of the cmd agents, causing the lock conflict.
+
+#### Fix Options
+
+**Option A: Disable Telegram on default agent** (recommended when cmd agents cover Telegram)
+```python
+import yaml
+config_path = "~/.hermes/config.yaml"
+cfg = yaml.safe_load(open(config_path))
+cfg["platforms"]["telegram"]["disabled"] = True  # or remove the section entirely
+yaml.dump(cfg, open(config_path, "w"), default_flow_style=False)
+```
+
+**Option B: Kill all and start fresh single gateway**
 ```bash
-# 1. Kill ALL gateway processes
+# 1. Kill ALL gateway processes (be careful not to kill the CLI session)
 sudo kill -9 $(pgrep -f 'hermes gateway run')
-
-# 2. Wait for them to actually die
 sleep 3
+# Verify all dead — pgrep should return "ALL DEAD"
 pgrep -f 'hermes gateway run' || echo "ALL DEAD"
 
-# 3. Clear any webhook port conflicts
+# 2. Clear stale lock files (PID-based staleness detection)
+find ~/.local/state/hermes/gateway-locks/ -name '*.lock' -exec python3 -c "
+import os, json, sys
+for f in sys.argv[1:]:
+    try:
+        with open(f) as fh: data = json.load(fh)
+        pid = int(data.get('pid', 0))
+        alive = True
+        try: os.kill(pid, 0)
+        except: alive = False
+        if not alive:
+            os.remove(f)
+            print(f'Removed stale lock: {os.path.basename(f)} (PID {pid})')
+        else:
+            print(f'Keeping active lock: {os.path.basename(f)} (PID {pid})')
+    except Exception as e:
+        print(f'Error with {f}: {e}')
+" {} +
+
+# 3. Clear webhook port if held
 sudo fuser -k 8644/tcp 2>/dev/null
 
 # 4. Start a SINGLE gateway instance
 cd ~/.hermes/hermes-agent && bash ~/.hermes/gateway-run.sh > /tmp/gateway-start.log 2>&1 &
 
-# 5. Verify it started cleanly
+# 5. Verify clean startup
 sleep 5
 tail -20 /tmp/gateway-start.log
-grep 'connected\|failed' /home/ubuntu/.hermes/logs/gateway.log | tail -10
+grep 'connected\\|failed' /home/ubuntu/.hermes/logs/gateway.log | tail -10
+```
+
+**Option C: Assign unique token to default agent** (gives it its own Telegram bot)
+Get a new bot token from @BotFather, then update `~/.hermes/config.yaml`:
+```yaml
+platforms:
+  telegram:
+    enabled: true
+    token: "NEW_BOT_TOKEN_HERE"
+    allow_all: true
 ```
 
 ### WhatsApp
