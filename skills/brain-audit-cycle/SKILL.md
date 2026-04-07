@@ -108,14 +108,35 @@ find /tmp -name "*.lock" -user $USER -mtime +1 -delete 2>/dev/null
 
 ## Phase 6: Brain Archive + Sync
 
+**NOTE:** The memory tool is DISABLED in cron context. ALWAYS use brain files for archival.
+
 ```bash
-# Archive learnings
+# Archive learnings (MUST use brain files in cron context)
 mkdir -p ~/brain/memory/archive/learned/$(date +%F)/
 # Write learning file...
 
 # Sync to GitHub
 bash ~/brain/scripts/sync.sh
 ```
+
+## Phase 7: Memory Consolidation (New - Cron-Optimized)
+
+The cron audit cycle includes cross-domain pattern detection and utility scoring:
+
+1. **Cross-domain transfer**: Identify patterns applicable to unrelated domains
+   - Error handling patterns from Python → JavaScript
+   - Testing strategies from backend → frontend
+   - Architecture patterns reused in similar projects
+
+2. **Skill pruning review**:
+   - Check for unused skills (>30 days) → archive candidate
+   - Score each skill: success_rate × usage_frequency × recency
+   - Flag skills scoring <0.2 for deletion review
+
+3. **Memory decay analysis**:
+   - Count facts per category from session_search results
+   - Topics with 0 hits in 30 days → candidate for archival
+   - High-utility facts → tag for permanent retention
 
 ## Key Pitfalls
 
