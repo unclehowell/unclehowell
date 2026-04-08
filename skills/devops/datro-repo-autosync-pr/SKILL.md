@@ -86,6 +86,7 @@ Enable:
 - State:
   - `/var/lib/datro-auto-sync/pr_last_output.txt`
   - `/var/lib/datro-auto-sync/pr_latest_url.txt`
+  - `/var/lib/datro-auto-sync/last_pr_epoch`  (PR throttle timestamp)
 
 ## Verification
 
