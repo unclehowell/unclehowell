@@ -108,7 +108,7 @@ find /tmp -name "*.lock" -user $USER -mtime +1 -delete 2>/dev/null
 
 ## Phase 6: Brain Archive + Sync
 
-**NOTE:** The memory tool is DISABLED in cron context. ALWAYS use brain files for archival.
+**NOTE:** The `memory` tool may be unavailable in some cron/headless deployments depending on configuration. If the `memory` tool works, use it for durable, high-signal facts. If it is unavailable, ALWAYS fall back to brain files for archival.
 
 ```bash
 # Archive learnings (MUST use brain files in cron context)
