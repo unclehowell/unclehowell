@@ -1,7 +1,8 @@
 {
   "assets": {
-    "background": "assets/img/boxed-bg.jpg",
-    "logo": "assets/img/logo.png"
+    "background": "assets/img/withdraw.png",
+    "logo": "assets/img/logo.png",
+    "logoPosition": "top-left"
   },
   "text": {
     "headlines": [
