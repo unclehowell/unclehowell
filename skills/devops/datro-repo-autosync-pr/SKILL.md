@@ -115,8 +115,8 @@ Enable:
 - Fix: use here-string/heredoc input instead of pipelines.
 
 3) PR created from the wrong branch
-- If you choose PR script option 1 (create new branch), it may create a clean branch rooted at origin and not include your local commits.
-- For autosync PRs, prefer option 2 (update existing PR on current branch) so head is the work branch.
+- If you choose PR script option 1 (create new branch), it will root a fresh `feature/auto-*` branch at origin and may leave your local commits behind (you’ll see “you are leaving X commits behind”).
+- For autosync PRs, use option 2 (update/create PR for the current branch) so the PR head contains the actual work-branch commits.
 
 ## Optional: notifications
 
