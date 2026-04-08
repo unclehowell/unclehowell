@@ -140,7 +140,7 @@ The cron audit cycle includes cross-domain pattern detection and utility scoring
 
 ## Key Pitfalls
 
-- **Memory tool ALWAYS unavailable in cron**: The `memory` tool returns error "Memory is not available. It may be disabled in config or this environment." CONFIRMED. Use brain files (`~/brain/memory/`) for archival and session_search for recall instead.
+- **Memory tool availability varies in cron**: Depending on platform/config, the `memory` tool may be available or disabled. Prefer using it when present (high-signal durable facts). Always have a fallback path that writes curated notes to brain files (`~/brain/memory/`).
 - **No venv in some environments**: Check if `venv/` exists before `source venv/bin/activate`. Fall back to system `python3`.
 - **Brain symlink can resolve differently**: Always use `~/brain/` or `${BRAIN_ROOT}`, never hardcoded `/home/USERNAME/brain/`.
 - **Umbrella skills without root SKILL.md are NORMAL**: Don't try to "fix" them — they have nested sub-skills.
