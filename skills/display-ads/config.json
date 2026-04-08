@@ -6,20 +6,20 @@
   },
   "text": {
     "headlines": [
-      "Lorem ipsum dolor sit amet consectetur",
-      "Sed do eiusmod tempor incididunt ut labore",
-      "Ut enim ad minim veniam quis nostrud",
-      "Duis aute irure dolor in reprehenderit",
-      "Excepteur sint occaecat cupidatat non proident"
+      "Premium Quality Guaranteed",
+      "Limited Time Offer",
+      "Shop Now Save More",
+      "Free Shipping Available",
+      "Expert Service Since 1990"
     ],
-    "smallprint": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris."
+    "smallprint": "Terms and conditions apply. See website for full details. Limited time offer."
   },
   "colors": [
+    { "name": "Black", "value": "#000000" },
     { "name": "Deep Blue", "value": "#1e3a8a" },
     { "name": "Royal Purple", "value": "#7c3aed" },
     { "name": "Emerald", "value": "#059669" },
-    { "name": "Crimson", "value": "#dc2626" },
-    { "name": "Midnight", "value": "#111827" }
+    { "name": "Crimson", "value": "#dc2626" }
   ],
   "dimensions": [
     { "name": "Medium Rectangle", "width": 300, "height": 250 },
