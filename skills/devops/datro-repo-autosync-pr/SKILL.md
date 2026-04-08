@@ -105,10 +105,16 @@ Enable:
 
 ## Common pitfalls (what we learned)
 
+0) Duplicate sync mechanisms causing PR spam
+- This machine may already have cron-based sync jobs (e.g. `~/.hermes/repo-sync.sh` via `repo-sync-cron.sh`).
+- If `datro-auto-sync.timer` is enabled, disable those cron jobs to enforce a single policy and keep PR creation under control.
+  - `crontab -l` then comment out any `repo-sync-cron.sh` lines.
+
 1) State dir permission errors
 - Symptom: `Permission denied` writing `/var/lib/datro-auto-sync/pr_last_output.txt`
 - Fix:
   - `sudo chown -R ubuntu:ubuntu /var/lib/datro-auto-sync`
+  - `sudo chmod 750 /var/lib/datro-auto-sync`
 
 2) systemd exit 141 (SIGPIPE)
 - Symptom: `status=141` with no other error
