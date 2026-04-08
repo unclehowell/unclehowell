@@ -189,6 +189,18 @@ Optional belt-and-braces:
 Pitfall:
 - npm updates / reinstall of @google/gemini-cli may overwrite the wrapper. Re-apply after upgrades.
 
+Extra hardening (recommended on this server)
+- Store HONCHO_API_KEY in BOTH places for resilience:
+  1) ~/.hermes/honcho_api_key.env (chmod 600)
+  2) ~/.hermes/honcho.json (apiKey field, chmod 600)
+- Then configure Gemini MCP server `mcpServers.honcho.env.HONCHO_API_KEY` from that env file.
+- Verify Honcho auth with:
+  - /home/ubuntu/.hermes/hermes-agent/venv/bin/python ~/.gemini/mcp/honcho/honcho_tool.py profile <<<'{}'
+
+Known limitation
+- Hermes tool `honcho_conclude` may fail to initialize if Hermes itself is not configured with HONCHO_* env vars. In that case, fall back to the Honcho Python SDK:
+  - from honcho import Honcho; Honcho(workspace_id='hermes').peer('<ai>').conclusions_of('<user>').create([...])
+
 10) Operational preference: keep keys out of disk
 If you can’t or won’t store keys in settings.json, keep them in env files and source them before use.
 If you can’t edit ~/.bashrc, source manually in the current session:
