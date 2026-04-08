@@ -41,6 +41,13 @@ Campaigns are referenced by ID (e.g., "campaign 1") in all documentation and age
 - Transparent operations
 - Collective intelligence over individual agents
 
+## Harness engineering doctrine (operating model)
+- Human attention is the scarce resource.
+- The engineer’s job is to design the environment, feedback loops, and context so agents can do reliable work.
+- Anything not discoverable in-repo effectively doesn’t exist to the agent.
+- Encode taste as mechanical constraints (lints/tests) with remediation-oriented error messages.
+- Self-improvement: treat session friction as signals; feed fixes back into docs/skills/lints.
+
 ## Goals
 - Maximize lead quality and volume
 - Minimize customer acquisition cost
