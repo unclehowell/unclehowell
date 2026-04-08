@@ -125,6 +125,12 @@ Enable:
 - If you choose PR script option 1 (create new branch), it will root a fresh `feature/auto-*` branch at origin and may leave your local commits behind (you’ll see “you are leaving X commits behind”).
 - For autosync PRs, use option 2 (update/create PR for the current branch) so the PR head contains the actual work-branch commits.
 
+4) PR rate limit (no more than 1 PR per 10 minutes)
+- Implement a simple throttle in `auto-sync.sh` using an epoch file:
+  - write/read `/var/lib/datro-auto-sync/last_pr_epoch`
+  - skip running `pr_automation.sh` if `(now - last) < 600`
+- This prevents PR storms if the timer fires frequently or the repo remains ahead.
+
 4) systemd exit 141 (SIGPIPE) even when script works in a shell
 - Cause: feeding `pr_automation.sh` via a pipeline inside a oneshot unit can trigger SIGPIPE and make systemd report status=141.
 - Fix: do not use `printf ... | ./pr_automation.sh`.
