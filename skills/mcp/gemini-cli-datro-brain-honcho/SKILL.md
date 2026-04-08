@@ -136,8 +136,53 @@ B) MCP server discovery
 - "Invalid API key" from Honcho helper: HONCHO_API_KEY is wrong/expired; rotate/set correct one.
 - Browser-based docs fetch blocked by Chrome sandbox in some Ubuntu/VM/container setups: use curl/python urllib to pull docs instead of browser tool.
 
-9) Operational preference: keep keys out of disk
-If you can’t edit ~/.bashrc via file tools (protected), create a dedicated env file and source it manually:
-- ~/.gemini/gemini.env (chmod 600)
-Then:
+9) Hardening & persistence (reboot-safe)
+Goal: make Gemini always load the right env (Honcho + optional Gemini API key) regardless of shell init files.
+
+9.1 Dedicated env files (recommended)
+- Honcho key:
+  - ~/.hermes/honcho_api_key.env  (chmod 600)
+- Gemini key (optional):
+  - ~/.gemini/gemini.env (chmod 600)
+
+9.2 Inject HONCHO_API_KEY directly into Gemini MCP server env (most reliable)
+If you want Gemini to always pass the key to the MCP server (even if your shell didn’t source env files), set:
+
+In ~/.gemini/settings.json:
+{
+  "mcpServers": {
+    "honcho": {
+      ...,
+      "env": {
+        "HONCHO_API_KEY": "<key>",
+        "HONCHO_WORKSPACE_ID": "hermes",
+        "HONCHO_MCP_PYTHON": "/home/ubuntu/.hermes/hermes-agent/venv/bin/python"
+      }
+    }
+  }
+}
+
+Security note:
+- If you store secrets inside settings.json, lock it down: chmod 600 ~/.gemini/settings.json
+
+9.3 Wrapper approach when ~/.bashrc can’t be edited (or is protected)
+Create a wrapper that sources env files then execs the real Gemini binary.
+Common hardening pattern (NVM install):
+- Locate gemini: which gemini
+- Move the original to gemini.real
+- Replace gemini with a wrapper that sources:
+  - ~/.hermes/honcho_api_key.env
+  - ~/.gemini/gemini.env
+  then execs gemini.real.
+
+Optional belt-and-braces:
+- Add /usr/local/bin/gemini that calls the wrapper path.
+
+Pitfall:
+- npm updates / reinstall of @google/gemini-cli may overwrite the wrapper. Re-apply after upgrades.
+
+10) Operational preference: keep keys out of disk
+If you can’t or won’t store keys in settings.json, keep them in env files and source them before use.
+If you can’t edit ~/.bashrc, source manually in the current session:
+- source ~/.hermes/honcho_api_key.env
 - source ~/.gemini/gemini.env
