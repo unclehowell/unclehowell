@@ -16,18 +16,80 @@ category: devops
 
 ### Step 1: Map all profiles and gateways
 ```bash
-# List all profiles
-ls ~/.hermes/profiles/
+# Hermes-native listing (preferred)
+hermes profile list
 
-# List all gateway services
-systemctl --user list-unit-files | grep hermes-gateway
+# Filesystem listing (legacy)
+ls ~/.hermes/profiles/ 2>/dev/null || true
+
+# List all gateway services (system scope + user scope)
+systemctl list-unit-files | grep hermes-gateway || true
+systemctl --user list-unit-files | grep hermes-gateway || true
 
 # Check which profiles are RUNNING vs dead
-for svc in $(systemctl --user list-unit-files | grep hermes-gateway | awk '{print $1}'); do
-    state=$(systemctl --user show -p ActiveState --value $svc)
-    echo "  $svc: $state"
+for scope in system --user; do
+  for svc in $(systemctl $scope list-unit-files 2>/dev/null | grep hermes-gateway | awk '{print $1}'); do
+    state=$(systemctl $scope show -p ActiveState --value $svc)
+    echo "  [$scope] $svc: $state"
+  done
 done
 ```
+
+### Step 1b: Consolidate profiles (purge) + handle the reserved `default`
+Use this when you want to keep ONLY a small set of profiles.
+
+Key findings:
+- Hermes refuses to rename the reserved `default` profile ("Cannot rename the default profile").
+- On some installs, `default` lives at `~/.hermes` (root), while other profiles live under `~/.hermes/profiles/<name>`.
+
+Procedure (example: keep `backup` and `commandfallback`, and create `commanddefaut` as the effective default):
+
+```bash
+# 0) Stop gateways for profiles you’re about to delete (systemd scope varies)
+# If a gateway is running, profile deletion may leave residual state.db-wal / pid files.
+sudo systemctl stop hermes-gateway-<profile> 2>/dev/null || true
+systemctl --user stop hermes-gateway-<profile> 2>/dev/null || true
+
+# 1) Delete unwanted profiles
+hermes profile delete -y <profile>
+
+# If Hermes reports directory-not-empty (usually because gateway wrote locks), clean up:
+rm -rf ~/.hermes/profiles/<profile>
+
+# 2) "Rename default" workaround: clone it to a new profile
+hermes profile create commanddefaut --clone-from default --clone --no-alias
+hermes profile use commanddefaut
+hermes profile alias commanddefaut
+
+# 3) Retire the reserved root `default` (disable accidental usage)
+# IMPORTANT: ensure any *running* gateway profile has its own .env BEFORE you retire root .env
+install -m 600 ~/.hermes/.env ~/.hermes/profiles/commandfallback/.env 2>/dev/null || true
+
+# Backup the root default key files (avoids `hermes profile export` symlink issues)
+TS=$(date -u +%Y%m%dT%H%M%SZ)
+tar -czf ~/default.root-files.pre-retire.$TS.tar.gz \
+  ~/.hermes/config.yaml ~/.hermes/.env ~/.hermes/SOUL.md ~/.hermes/auth.json ~/.hermes/honcho.json \
+  2>/dev/null || true
+
+# Replace root .env with a stub
+mv ~/.hermes/.env ~/.hermes/.env.retired.$TS
+cat > ~/.hermes/.env <<'EOF'
+# RETIRED DEFAULT PROFILE
+# Use profile: commanddefaut (sticky) or commandfallback (gateway).
+EOF
+chmod 600 ~/.hermes/.env
+
+# Disable the root default model + fallbacks
+# (Edit ~/.hermes/config.yaml): set provider/model to a dummy, and set fallback_providers: []
+
+# Restart and verify the gateway you kept
+sudo systemctl restart hermes-gateway-commandfallback
+sudo systemctl --no-pager --full status hermes-gateway-commandfallback | sed -n '1,80p'
+```
+
+Notes:
+- `hermes profile export default` can fail if it tries to follow/bundle broken symlinks; the tarball approach above is a robust backup.
+- After retiring root `default`, `hermes profile show default` should display something like `Model: RETIRED (retired)` and `Gateway: stopped`.
 
 ### Step 2: Check profile config against running process
 ```bash
