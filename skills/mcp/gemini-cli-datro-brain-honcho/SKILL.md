@@ -87,8 +87,11 @@ We implement a local MCP server using Node + @modelcontextprotocol/sdk, and a Py
 - mkdir -p ~/.gemini/mcp/honcho
 - cd ~/.gemini/mcp/honcho
 - npm init -y
-- npm install @modelcontextprotocol/sdk@latest zod
+- npm install @modelcontextprotocol/sdk@latest
+- npm install zod
 
+Note:
+- Some versions of the MCP TypeScript SDK may not expose zod as a direct dependency you can import from your own code. Installing zod explicitly avoids runtime import errors.
 6.2 Python helper (honcho_tool.py)
 - Use the Hermes venv python if present, e.g. /home/ubuntu/.hermes/hermes-agent/venv/bin/python
 - Load HONCHO_API_KEY from env; optionally fallback to ~/.hermes/honcho_api_key.env or ~/.hermes/honcho.json if present.
