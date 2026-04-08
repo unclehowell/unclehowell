@@ -17,10 +17,33 @@ Delegate coding tasks to [Codex](https://github.com/openai/codex) via the Hermes
 ## Prerequisites
 
 - Codex installed: `npm install -g @openai/codex`
-- OpenAI API key configured
+- OpenAI API key configured (via `OPENAI_API_KEY` or Codex auth flow)
 - **Must run inside a git repository** — Codex refuses to run outside one
 - Use `pty=true` in terminal calls — Codex is an interactive terminal app
 
+## Harness (recommended “Codex harness” pattern)
+
+For reliable, repeatable Codex runs, wrap Codex in a *harness* that:
+
+1) Creates an isolated git worktree/clone (so Codex doesn’t clobber your main tree)
+2) Pins a clear base branch and working branch name
+3) Runs tests/formatters before declaring success
+4) Writes an artifact (log) you can inspect later
+
+Minimal harness example (run in your repo):
+
+- Create worktree:
+  - `git worktree add -b codex/<task> /tmp/codex-<task> origin/main`
+- Run Codex in that worktree:
+  - `codex exec '<task instructions> (run tests; commit when done)'`
+- Verify:
+  - `git -C /tmp/codex-<task> status -sb`
+  - run `pytest`/`npm test`/etc.
+- Push + PR:
+  - `git -C /tmp/codex-<task> push -u origin codex/<task>`
+  - `gh pr create ...`
+
+This harness pattern prevents “dirty working tree” issues, makes rollbacks easy, and improves determinism.
 ## One-Shot Tasks
 
 ```
