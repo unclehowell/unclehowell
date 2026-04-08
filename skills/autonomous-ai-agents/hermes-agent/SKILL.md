@@ -490,6 +490,46 @@ terminal(command="tmux new-session -d -s resumed 'hermes --resume 20260225_14305
 
 ## Troubleshooting
 
+### Update fails on Ubuntu/Debian with `externally-managed-environment` (PEP 668)
+
+Symptom:
+- `hermes update` ends with pip error like:
+  - `error: externally-managed-environment`
+  - `pip install -e . returned non-zero exit status 1`
+
+Cause:
+- On Ubuntu/Debian, system Python may be PEP 668 “externally managed”, which blocks system-wide pip installs.
+
+Fix (recommended: use a venv for Hermes itself):
+
+```bash
+# 1) Install venv support (version may differ)
+sudo apt-get update
+sudo apt-get install -y python3.12-venv
+
+# 2) Create a venv inside the Hermes repo
+cd ~/.hermes/hermes-agent
+rm -rf venv
+python3 -m venv venv
+
+# 3) Install Hermes + deps into the venv
+./venv/bin/python -m pip install -U pip setuptools wheel
+./venv/bin/pip install -e .
+
+# 4) Ensure your `hermes` command points at the venv
+mkdir -p ~/.local/bin
+ln -sf ~/.hermes/hermes-agent/venv/bin/hermes ~/.local/bin/hermes
+
+# 5) Retry
+hermes update
+hermes doctor
+```
+
+Notes:
+- Avoid `pip --break-system-packages` unless you’re intentionally overriding OS package management.
+- If `hermes doctor` says “Honcho requires honcho-ai”, install it in the same venv:
+  `~/.hermes/hermes-agent/venv/bin/pip install -U honcho-ai`
+
 ### Voice not working
 1. Check `stt.enabled: true` in config.yaml
 2. Verify provider: `pip install faster-whisper` or set API key
