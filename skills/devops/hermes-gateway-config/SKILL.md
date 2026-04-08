@@ -20,7 +20,7 @@ Hermes reads config from multiple files — **different components read differen
 | `~/.hermes/.env` | Gateway at startup | API keys and secrets (loaded internally by gateway) |
 | `~/.hermes/gateway.env` | Shell sessions (via bashrc source) | Env vars available to ALL shell commands including opencode |
 | `~/.hermes/honcho.json` | Honcho plugin (via `from_global_config()`) | Honcho API key and host config |
-| `~/.hermes/honcho_api_key.env` | Shell sessions (via bashrc source) | HONCHO_API_KEY for CLI tools |
+| `~/.hermes/honcho_api_key.env` | Shell sessions + gateway wrapper (when sourced) | Preferred place for `HONCHO_API_KEY` (avoid storing the key directly in `config.yaml`) |
 
 CRITICAL: Shell commands (like opencode) source `~/.bashrc` which loads `gateway.env` and `honcho_api_key.env`, but NOT `~/.hermes/.env`. The `.env` file is only read by the gateway process itself.
 
