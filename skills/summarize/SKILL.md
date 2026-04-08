@@ -54,6 +54,27 @@ Default model is `google/gemini-3-flash-preview` if none is set.
 - `--firecrawl auto|off|always` (fallback extraction)
 - `--youtube auto` (Apify fallback if `APIFY_API_TOKEN` set)
 
+## If a site blocks curl/browser automation (403 / JS-heavy)
+
+Some sites (including openai.com articles) may return 403 to `curl`/`wget`, and in some sandboxed environments the browser runner may fail to launch (Chrome sandbox / userns restrictions).
+
+Fast fallback (no JS): use the `r.jina.ai` text-render proxy:
+
+- Convert:
+  - `https://example.com/page`
+- Into:
+  - `https://r.jina.ai/http://example.com/page`
+
+Then run summarize on that rendered URL:
+
+```bash
+summarize "https://r.jina.ai/http://example.com/page" --length long
+```
+
+Notes:
+- Prefer the `http://` form inside r.jina.ai even if the target is https; the proxy handles it.
+- This is a pragmatic extraction fallback; don’t use it for private/authenticated pages.
+
 ## Config
 
 Optional config file: `~/.summarize/config.json`
