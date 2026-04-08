@@ -41,6 +41,15 @@ All agents share knowledge through this brain. Memory of what has been happening
 - NEVER write API keys, credentials, or secrets to this brain (it's PUBLIC on GitHub)
 - Campaign URLs are stored in `.env` and referenced by ID (e.g., "campaign 1")
 
+## Harness engineering (user-taught doctrine)
+
+- AGENTS.md is a short map (~100 lines), not an encyclopedia.
+- docs/ is the system of record.
+- Anything not discoverable in-repo effectively doesn’t exist to the agent.
+- Skills should be short, discrete, composable.
+- Taste should be enforced mechanically (lints/tests) with remediation-style messages.
+- Don’t babysit agents; build the environment so the system converges autonomously.
+
 ## Communication Rules
 
 - Read `user-keyboard.md` for keyboard constraints
