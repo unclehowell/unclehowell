@@ -550,6 +550,30 @@ Notes:
 - **Config changes:** `/restart` reloads gateway config
 - **Code changes:** Restart the CLI or gateway process
 
+### After `hermes update`: systemd gateway services fail to restart ("Interactive authentication required")
+Symptom:
+- `hermes update` finishes code/deps update but prints something like:
+  - `Failed to restart hermes-gateway-<profile>: Interactive authentication required.`
+
+Cause:
+- Restarting `systemd` units requires sudo/polkit; `hermes update` may not be running with elevated privileges.
+
+Fix:
+```bash
+# Restart the affected units (example profiles)
+sudo systemctl restart hermes-gateway-commanddefault hermes-gateway-commandfallback
+
+# Verify health
+sudo systemctl --no-pager --full status hermes-gateway-commanddefault hermes-gateway-commandfallback
+
+# Check recent logs if needed
+sudo journalctl -u hermes-gateway-commanddefault -u hermes-gateway-commandfallback -n 200 --no-pager --full
+```
+
+Fallback (no sudo available):
+- Run gateway foreground:
+  `hermes -p <profile> gateway run --quiet`
+
 ### Skills not showing
 1. `hermes skills list` — verify installed
 2. `hermes skills config` — check platform enablement
