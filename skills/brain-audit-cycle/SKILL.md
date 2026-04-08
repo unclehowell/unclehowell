@@ -165,7 +165,7 @@ find ~/.hermes/checkpoints/ -maxdepth 1 -mindepth 1 -type d -mtime +0 -exec rm -
 ```
 
 ## Memory Tool Availability (CRITICAL)
-Memory tool is DISABLED in this environment. Confirmed: returns "Memory is not available." Use brain files (`~/brain/memory/`) and session_search instead.
+Memory tool availability is environment-dependent. If it is unavailable, use brain files (`~/brain/memory/`) for archival and `session_search` for recall. If it is available, use it for compact durable facts and keep brain files for longer-form writeups.
 
 For comprehensive audits, use this delegation pattern to research all three domains simultaneously:
 
