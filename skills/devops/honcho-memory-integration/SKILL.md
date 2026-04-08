@@ -123,7 +123,9 @@ score = usage_frequency × success_rate × recency_factor
 ### "Honcho session could not be initialized"
 Common causes:
 
-1. **Truncated/redacted API key** -- The `apiKey` field in `~/.hermes/honcho.json` or `~/.hermes/honcho_api_key.env` may have been saved as `hch-v3...xxxx` instead of the full key (~88 chars). Check all config files contain the full key. **All 3 config files must be updated together**: `honcho.json`, `honcho_api_key.env`, and `config.yaml`.
+1. **Truncated/redacted API key** — The `apiKey` field in `~/.hermes/honcho.json` or `~/.hermes/honcho_api_key.env` may have been saved as `hch-v3...xxxx` instead of the full key. Ensure both contain the **full** key.
+
+   **Recommended secret-handling pattern:** keep the key in `honcho.json` + `honcho_api_key.env`, and configure Hermes to read it via env var (`honcho.api_key_env: HONCHO_API_KEY`). Avoid embedding plaintext Honcho keys directly in `~/.hermes/config.yaml` (clear `honcho.api_key` if present).
 
 2. **Config file locations** (checked in this order by `HonchoClientConfig.from_global_config()`):
    - `$HERMES_HOME/honcho.json` -- primary config (JSON with `hosts` block + `apiKey`)
