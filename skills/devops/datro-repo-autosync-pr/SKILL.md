@@ -118,8 +118,13 @@ Enable:
 
 2) systemd exit 141 (SIGPIPE)
 - Symptom: `status=141` with no other error
-- Cause: piping into interactive scripts under systemd can break pipes.
-- Fix: use here-string/heredoc input instead of pipelines.
+- Causes we hit in the wild:
+  - feeding interactive scripts via pipes under systemd
+  - masking failures with `trap PIPE` (can make diagnosis harder)
+- Fix:
+  - Prefer here-string/heredoc input (bash) instead of pipelines.
+  - Avoid `trap PIPE` in this oneshot; make sure the script ends with `exit 0` on success.
+  - If you see `syntax error near unexpected token '<<<'`, you likely have a broken script (merge-conflict markers) or it’s being executed by `sh` instead of `bash`.
 
 3) PR created from the wrong branch
 - If you choose PR script option 1 (create new branch), it will root a fresh `feature/auto-*` branch at origin and may leave your local commits behind (you’ll see “you are leaving X commits behind”).
