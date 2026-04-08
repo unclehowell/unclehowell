@@ -118,6 +118,12 @@ Enable:
 - If you choose PR script option 1 (create new branch), it will root a fresh `feature/auto-*` branch at origin and may leave your local commits behind (you’ll see “you are leaving X commits behind”).
 - For autosync PRs, use option 2 (update/create PR for the current branch) so the PR head contains the actual work-branch commits.
 
+4) systemd exit 141 (SIGPIPE) even when script works in a shell
+- Cause: feeding `pr_automation.sh` via a pipeline inside a oneshot unit can trigger SIGPIPE and make systemd report status=141.
+- Fix: do not use `printf ... | ./pr_automation.sh`.
+  Use a here-string or heredoc:
+  - `./pr_automation.sh <<<"2"`
+
 ## Optional: notifications
 
 If you later wire notifications (Telegram, email, etc.), have the notifier send the contents of:
