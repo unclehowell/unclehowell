@@ -56,6 +56,11 @@ Write ~/.gemini/settings.json like:
 
 Notes
 - `context.includeDirectories` adds additional workspace roots.
+- CLI flag alternative: `--include-directories <dir1,dir2,...>` (Gemini CLI limits to 5 include directories).
+- `context.loadMemoryFromIncludeDirectories=true` makes `/memory reload` scan include dirs for GEMINI.md.
+
+Notes
+- `context.includeDirectories` adds additional workspace roots.
 - `context.loadMemoryFromIncludeDirectories=true` makes `/memory reload` scan those include dirs for GEMINI.md.
 
 4) Ensure Datro brain has a GEMINI.md
