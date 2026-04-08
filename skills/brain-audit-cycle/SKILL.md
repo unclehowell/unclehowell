@@ -143,6 +143,7 @@ The cron audit cycle includes cross-domain pattern detection and utility scoring
 - **Memory tool availability varies in cron**: Depending on platform/config, the `memory` tool may be available or disabled. Prefer using it when present (high-signal durable facts). Always have a fallback path that writes curated notes to brain files (`~/brain/memory/`).
 - **No venv in some environments**: Check if `venv/` exists before `source venv/bin/activate`. Fall back to system `python3`.
 - **Brain symlink can resolve differently**: Always use `~/brain/` or `${BRAIN_ROOT}`, never hardcoded `/home/USERNAME/brain/`.
+- **Browser automation may fail in hardened Linux/containers**: If the browser tool fails with Chrome sandbox errors (e.g., "No usable sandbox"), fall back to `web_extract`/`curl`/terminal-based retrieval for research and verification.
 - **Umbrella skills without root SKILL.md are NORMAL**: Don't try to "fix" them — they have nested sub-skills.
 - **Honcho config in multiple places**: Check both `~/.hermes/config.yaml` and `~/.hermes/honcho.json`.
 - **Checkpoints directory grows unbounded**: Monitor `~/.hermes/checkpoints/` — can consume GBs over time. CRITICAL: One large git session hit 4.2GB with loose objects + temp pack files. Clean aggressively:
