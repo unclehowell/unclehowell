@@ -18,7 +18,7 @@ notes:
 
 Goal
 - Install @google/gemini-cli
-- Ensure Gemini CLI uses additional context directories (Datro static brain + optional /home/ubuntu/brain)
+- Ensure Gemini CLI uses additional context directories (Datro static brain + optional /home/ubuntu/datro/static/brain)
 - Provide a working local MCP server alias `honcho` exposing a few Honcho memory tools
 
 1) Install Gemini CLI
@@ -44,7 +44,7 @@ Write ~/.gemini/settings.json like:
     "fileName": ["CONTEXT.md", "GEMINI.md"],
     "includeDirectories": [
       "/var/www/datro/static/brain",
-      "/home/ubuntu/brain"
+      "/home/ubuntu/datro/static/brain"
     ],
     "loadMemoryFromIncludeDirectories": true,
     "fileFiltering": {

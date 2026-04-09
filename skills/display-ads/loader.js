@@ -1,6 +1,6 @@
 /**
  * Display Ad Generator - Config Loader
- * Loads variables from /home/ubuntu/brain/skills/display-ads/config.json
+ * Loads variables from /home/ubuntu/datro/static/brain/skills/display-ads/config.json
  * Allows separation of agent commands from static UI
  */
 
@@ -56,7 +56,7 @@ class DisplayAdConfig {
         // This would require a backend API endpoint
         // For now, just log the change (agent can modify the file directly)
         console.log(`Config update requested: ${path} = ${value}`);
-        console.log('Have the agent modify /home/ubuntu/brain/skills/display-ads/config.json directly');
+        console.log('Have the agent modify /home/ubuntu/datro/static/brain/skills/display-ads/config.json directly');
         return false;
     }
 }

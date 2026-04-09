@@ -103,7 +103,7 @@ Agents write to `memory/archive/learned/YYYY-MM-DD/[agent-name].md` (gitignored)
 
 ### Required
 ```
-BRAIN_DIR=/home/unclehowell/brain
+BRAIN_DIR=/home/ubuntu/datro/static/brain
 ```
 
 ### Campaign Variables

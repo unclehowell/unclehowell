@@ -58,7 +58,7 @@
 - Model Health Monitor: http://localhost:8082
 
 ### Brain Location
-- Central brain: /home/unclehowell/brain/
+- Central brain: /home/ubuntu/datro/static/brain/
 - Always pull latest before important tasks
 - Save learnings after tasks complete
 

@@ -5,7 +5,7 @@
 
 set -eo pipefail
 
-BRAIN_DIR="/home/unclehowell/brain"
+BRAIN_DIR="/home/ubuntu/datro/static/brain"
 LEARNED_DIR="$BRAIN_DIR/learned"
 HOSTNAME=$(hostname)
 TIMESTAMP=$(date +%Y%m%d%H%M%S)

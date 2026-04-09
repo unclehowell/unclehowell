@@ -1,7 +1,7 @@
 #!/bin/bash
 # Brain Sync Service - Safely syncs brain folder to GitHub
 # Pulls latest, merges, commits local changes, and pushes
-# Usage: bash /home/unclehowell/brain/scripts/sync.sh
+# Usage: bash /home/ubuntu/datro/static/brain/scripts/sync.sh
 # Can be sourced by any agent
 
 set -euo pipefail

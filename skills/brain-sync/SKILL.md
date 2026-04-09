@@ -113,8 +113,8 @@ termux-setup-storage
 ## What to Archive
 
 All scripts use `${BRAIN_DIR:-$(eval echo ~$(whoami))/brain}` to resolve the correct brain path:
-- Server: `/home/ubuntu/brain`
-- Laptop: `/home/unclehowell/brain`
+- Server: `/home/ubuntu/datro/static/brain`
+- Laptop: `/home/ubuntu/datro/static/brain`
 
 ## When to Skip
 

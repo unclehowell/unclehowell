@@ -4,7 +4,7 @@
 
 | Server | Package | Purpose | Args |
 |--------|---------|---------|------|
-| brain | @modelcontextprotocol/server-filesystem | Access to brain directory | /home/unclehowell/brain |
+| brain | @modelcontextprotocol/server-filesystem | Access to brain directory | /home/ubuntu/datro/static/brain |
 | filesystem | @modelcontextprotocol/server-filesystem | General filesystem access | /home/unclehowell |
 | memory-mcp | @modelcontextprotocol/server-memory | Knowledge graph memory | - |
 | sequential-thinking | @modelcontextprotocol/server-sequential-thinking | Problem solving workflow | - |

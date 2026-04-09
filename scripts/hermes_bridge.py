@@ -13,7 +13,7 @@ import json
 import subprocess
 from pathlib import Path
 
-BRAIN_DIR = "/home/unclehowell/brain"
+BRAIN_DIR = "/home/ubuntu/datro/static/brain"
 MEMORY_DIR = f"{BRAIN_DIR}/memory"
 LEARNED_DIR = f"{BRAIN_DIR}/memory/archive/learned"
 

@@ -1,8 +1,8 @@
 #!/bin/bash
 # Brain auto-hook for all shells
-# Add to ~/.bashrc: source \$\{BRAIN_DIR:-/home/unclehowell/brain\}/scripts/auto_hook.sh
+# Add to ~/.bashrc: source \$\{BRAIN_DIR:-/home/ubuntu/datro/static/brain\}/scripts/auto_hook.sh
 
-BRAIN_DIR="${BRAIN_DIR:-/home/unclehowell/brain}"
+BRAIN_DIR="${BRAIN_DIR:-/home/ubuntu/datro/static/brain}"
 
 # Pull brain on shell start
 pull_brain() {

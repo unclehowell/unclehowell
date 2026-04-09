@@ -1,8 +1,8 @@
 #!/bin/bash
 # Brain Hook - Source this in any agent to use shared brain
-# Add to top of agent scripts: source \$\{BRAIN_DIR:-/home/unclehowell/brain\}/scripts/hook.sh
+# Add to top of agent scripts: source \$\{BRAIN_DIR:-/home/ubuntu/datro/static/brain\}/scripts/hook.sh
 
-BRAIN_DIR="${BRAIN_DIR:-/home/unclehowell/brain}"
+BRAIN_DIR="${BRAIN_DIR:-/home/ubuntu/datro/static/brain}"
 AGENT_NAME="${1:-unknown}"
 CURRENT_TASK="$2"
 

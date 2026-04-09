@@ -14,7 +14,7 @@
 
 ## What I Should Have Done
 
-1. Read `/home/unclehowell/brain/AGENTS.md` at session start (as instructed)
+1. Read `/home/ubuntu/datro/static/brain/AGENTS.md` at session start (as instructed)
 2. Run `hermes help` (first tool call)
 3. Immediately see `profile` in command list
 4. Run `hermes profile list`

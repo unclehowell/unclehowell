@@ -2,7 +2,7 @@
 # Universal Brain Integration
 # Source this in any agent startup to enable brain features
 
-BRAIN_DIR="${BRAIN_DIR:-/home/unclehowell/brain}"
+BRAIN_DIR="${BRAIN_DIR:-/home/ubuntu/datro/static/brain}"
 
 # Pull latest brain
 pull_brain() {
