@@ -14,9 +14,9 @@ Generates multiple display ad variations with **consistent branding** (same back
 
 ## Architecture
 
-- **UI**: Static HTML at `/var/www/canvas/index.html` (never modified by agent)
+- **UI**: Static HTML at `/home/ubuntu/datro/static/canvas/index.html` (never modified by agent)
 - **Configuration**: `/home/ubuntu/datro/static/brain/skills/display-ads/config.json` (agent-editable)
-- **Assets**: `/var/www/canvas/assets/` directory
+- **Assets**: `/home/ubuntu/datro/static/canvas/assets/` directory
 - **Live**: https://command.financecheque.uk/canvas/
 
 ## Features
@@ -33,7 +33,7 @@ Generates multiple display ad variations with **consistent branding** (same back
 ## Configuration File
 
 **Location**: `/home/ubuntu/datro/static/brain/skills/display-ads/config.json`
-**Web Access**: `/var/www/canvas/config.json` (symlink)
+**Web Access**: `/home/ubuntu/datro/static/canvas/config.json` (symlink)
 
 Schema:
 ```json
@@ -59,14 +59,14 @@ Schema:
 
 ### Update Background Image
 ```bash
-cp /path/to/new-bg.jpg /var/www/canvas/assets/img/
+cp /path/to/new-bg.jpg /home/ubuntu/datro/static/canvas/assets/img/
 edit /home/ubuntu/datro/static/brain/skills/display-ads/config.json
 # Update: assets.background = "assets/img/new-bg.jpg"
 ```
 
 ### Update Logo
 ```bash
-cp /path/to/logo.png /var/www/canvas/assets/img/
+cp /path/to/logo.png /home/ubuntu/datro/static/canvas/assets/img/
 edit /home/ubuntu/datro/static/brain/skills/display-ads/config.json
 # Update: assets.logo = "assets/img/logo.png"
 ```
@@ -112,7 +112,7 @@ Agent only modifies `/home/ubuntu/datro/static/brain/skills/display-ads/config.j
 Location: `/etc/nginx/sites-available/datro`
 ```nginx
 location /canvas/ {
-  alias /var/www/canvas/;
+  alias /home/ubuntu/datro/static/canvas/;
   index index.html;
   try_files $uri $uri/ /canvas/index.html;
 }
@@ -122,12 +122,12 @@ location /canvas/ {
 
 **Config not loading:** Verify symlink exists:
 ```bash
-ls -la /var/www/canvas/config.json
+ls -la /home/ubuntu/datro/static/canvas/config.json
 ```
 
 **Wrong folder:** Config must be at `/home/ubuntu/datro/static/brain/skills/display-ads/config.json`
 
-**No styles:** Assets must be in `/var/www/canvas/assets/`
+**No styles:** Assets must be in `/home/ubuntu/datro/static/canvas/assets/`
 
 ## Skills Integration
 

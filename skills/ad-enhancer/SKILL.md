@@ -41,6 +41,6 @@ The enhancement uses a simple rules-based approach:
 
 ## Files
 
-- `/var/www/canvas/index.html` - Canvas with enhancement integration
-- `/var/www/canvas/scripts/ad_enhance.py` - Enhancement script
-- `/var/www/canvas/api/enhance.php` - PHP bridge for browser calls
+- `/home/ubuntu/datro/static/canvas/index.html` - Canvas with enhancement integration
+- `/home/ubuntu/datro/static/canvas/scripts/ad_enhance.py` - Enhancement script
+- `/home/ubuntu/datro/static/canvas/api/enhance.php` - PHP bridge for browser calls
