@@ -7,10 +7,20 @@ Synchronization system for `static/fcuk` between local datro and GitHub.
 - **Path**: `/home/ubuntu/bin/fcuk-auto-sync.sh`
 - **Runs**: Every 15 mins via cron
 - **Behavior**: 
-  1. Check if local file exists
-  2. Check for uncommitted local changes
-  3. If none → exit immediately (no GitHub API calls)
-  4. Only fetch remote if local changes exist to push
+  1. Fetch remote to get latest state
+  2. Compare local HEAD vs remote HEAD
+  3. Check for uncommitted local changes
+  4. Determine sync direction:
+     - Both unchanged → exit (no API calls)
+     - Remote ahead → pull
+     - Local changes only → push
+     - Both changed → merge then push
+
+## Multi-Machine Sync (2026-04-10)
+Handles multiple machines (server + laptop) gracefully:
+- Fetches remote first
+- Detects if remote has new commits
+- Merges local + remote before pushing
 
 ## Key Improvement (2026-04-10)
 - Optimized: Exits immediately if nothing to sync
