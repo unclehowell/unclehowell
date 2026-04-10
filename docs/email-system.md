@@ -48,6 +48,8 @@ export RESEND_API_KEY
 - Apostrophes in sender name cause issues - use plain ASCII
 - Resend uses US servers but works for UK delivery
 
-## Cron Integration
+## Contact Rules
 
-The `fcuk-auto-sync.sh` script sends email notifications on sync success/failure to `hywelapbuckler@gmail.com`.
+- **Only hywelapbuckler@gmail.com** receives emails from DATRO systems
+- This is Hywel Buckler (system architect and creator)
+- No other email addresses unless explicitly authorized by Hywel
