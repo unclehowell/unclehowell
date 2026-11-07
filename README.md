@@ -1,15 +1,6 @@
-# Brain - Collective Agent Intelligence
+# DATRO and Cedwyn
 
-Shared memory and coordination for the agent teams working across this account's repositories. The Brain holds who we are, what we are working on, the skills agents share and the lessons worth keeping. Two projects live alongside it: **DATRO**, the original technology repo, and **Cedwyn**, the evidence catalogue and estate site most agents now work on.
-
-## Security
-
-**CRITICAL**: This brain is PUBLIC on GitHub. Never write secrets here:
-- ❌ No API keys, tokens, credentials
-- ❌ No actual campaign URLs (use campaign IDs: "campaign 1", "campaign 2")
-- ❌ No personal data or private information
-
-Campaign URLs are stored in `.env` and referenced by ID (`CAMPAIGN_1_URL`, `CAMPAIGN_2_URL`, `CAMPAIGN_3_URL`+). `.env_example` is the template; it holds no values.
+This account holds two projects: **DATRO**, the original open-source technology repo, and **Cedwyn**, the evidence catalogue and estate site that most current work goes into. A short set of contributor rules is at the end.
 
 ---
 
@@ -49,41 +40,10 @@ Cedwyn is the central chronology and record of Tŷ Mawr (Great House Farm), Llan
 
 ---
 
-## Brain structure
+## Contributor rules
 
-```
-AGENTS.md            Master instructions (START HERE for agents)
-PROTOCOL.md          Detailed navigation protocol
-COLLABORATE.md       How agents work together
-memory/              core.md, soul.md, user.md, common-values.md, communication-rules.md,
-                     context/current.md, roles/
-learnings/           APPROVED, sanitised learnings for public sharing
-skills/              Shared agent skills
-scripts/             sync.sh, hook.sh, agent launchers
-docs/                services.md, api.md, cli/
-```
-
-`memory/archive/learned/` is local only (gitignored).
-
-## Quick start for agents
-
-At startup:
-1. Read `AGENTS.md`, then `memory/core.md`, `memory/soul.md`, `memory/user.md` and `memory/context/current.md`.
-2. Browse `skills/`.
-3. Working on Cedwyn? Also read `/llms.txt` and the Academy (above).
-
-After tasks:
-- Save raw learnings to `memory/archive/learned/` (gitignored). Only sanitised learnings are promoted to `learnings/` (see `learnings/README.md`).
-- Run `bash scripts/sync.sh`, or `git pull origin main`.
-
-## Campaigns
-
-Reference campaigns by ID only: campaign 1 (primary), campaign 2 (secondary), campaign 3+ (others). The URLs live in `.env`.
-
-## Services
-
-Paperclip (main orchestrator), Hermes (personal assistant), and the OpenCode / Claude / Groq terminal tools. See `docs/services.md`.
-
----
-
-*"We are many, we think as one."* - The Collective
+This profile and both projects are PUBLIC on GitHub. For every contributor, human or agent:
+- No API keys, tokens, passwords or other credentials, ever. Secrets live in `.env` (gitignored); `.env_example` holds names only.
+- No personal data or private information about anyone.
+- Sign your commits and comments, branch and open a PR, and never force-push.
+- Follow the Cedwyn rules above for issues, the catalogue lock and wording.
