@@ -10,7 +10,7 @@ This account holds two projects: **DATRO**, the original open-source technology 
 
 DATRO ("DATRO Security Group") is the original monorepo: open-source wireless and Raspberry Pi web-server work (ARMv6/v7/v8), including the HotspotBnB GUI, which shows demo data when opened online and the installed webapps when it runs on a Pi on the local network.
 
-- **Domains:** until September 2021 DATRO ran on two domains, `datro.xyz` (branch `gh-pages`) and `datro.world` (a second branch served through Netlify). The README records the move to one domain, with `world.datro.xyz` taking over the second domain's role. `gh-pages` still carries the April DATRO homepage.
+- **Domains:** each DATRO branch is now served at `<branch>-datro.bucklerfamily.estate` (for example [gh-pages-datro.bucklerfamily.estate](https://gh-pages-datro.bucklerfamily.estate/), [dartboard-datro.bucklerfamily.estate](https://dartboard-datro.bucklerfamily.estate/)). The old `datro.xyz` and `datro.world` domains are long gone.
 - **Branches:** about 78. Besides the DATRO branches (`gh-pages`, `datro`, `gui`, `hbnb`, `library`, `v0.8`), most were the first homes of the BucklerFamily.Estate sites: `dartboard`, `watchtower`, `wayback`, `maps`, `wiki`, `emails`, `research`, `ebooks`, `fcg` and others.
 - **Today:** on 26 October 2026 those site sections moved into Cedwyn (below), and DATRO is now separate from the BucklerFamily.Estate build: nothing from it is mirrored into Cedwyn. Some branches still take data commits: `dartboard` gets a daily roadmap refresh, and `fcg` holds the first-seen register. The old branches are kept as history.
 
